@@ -1,0 +1,51 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+main {
+  height: 100%;
+}
+
+main .menu-bar {
+  width: 15%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #2E8C8C;
+}
+
+main .menu-bar .div-1,
+main .menu-bar .div-2 {
+  gap: 1vh;
+  padding: 4vh 2vh;
+  margin: 2vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main .menu-bar .div-2 {
+  margin-top: auto;
+  padding-bottom: 7.5vh;
+}
+
+main .menu-bar .div-1 a,
+main .menu-bar .div-2 a {
+  font-size: 22px;
+  color: #9CD7D7;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+}
+
+main .container {
+  width: 70%;
+}
