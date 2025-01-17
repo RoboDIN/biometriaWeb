@@ -1,15 +1,9 @@
-<!-- REALIZAR AUTENTICAÇÃO NESTE ARQUIVO -->
 <?php
 
-use App\Http\Controllers\Auth\AuthController2;
+use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Route;
 
 // Rotas de autenticação
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
-Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
-
-// Layouts protegidas 
-Route::get('/', function () {
-    return view('home');
-})->middleware('auth')->name('home');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

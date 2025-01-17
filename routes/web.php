@@ -3,10 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Rotas configurados o fluxo web do sistema 
+// Rotas configurados o fluxo web do sistema  
 Route::get('/', function () {
     return view('home');
 });
+// ->middleware('auth')->name('home');   // Layout protegidas
+
+
+require __DIR__ . '/auth.php';
 
 
 

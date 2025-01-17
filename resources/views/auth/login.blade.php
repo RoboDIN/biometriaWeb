@@ -15,25 +15,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     {{-- CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 
-    <title>Home</title>
+    <title>Login</title>
   </head>
   <body>
+    <header>
+        <img src="{{ asset('images/logo-uem.png') }}" alt="Logo da UEM">
+        <img src="{{ asset('images/logo-din.png') }}" alt="Logo da DIN">
+    </header>
     <main>
         <div class="login-container">
             <h1>Login</h1>
             <form action="{{ url('/login') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Registro Acadêmico (RA):</label>
                     <input type="email" name="email" id="email" required>
                     @error('email')
                         <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="password">Senha</label>
+                    <label for="password">Senha: </label>
                     <input type="password" name="password" id="password" required>
                     @error('password')
                         <div class="error">{{ $message }}</div>
