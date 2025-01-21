@@ -29,35 +29,35 @@
 
       <div class="item">
         <div class="div">
-          <label for="orientador">Orientador:</label>
-          <input type="text" id="orientador" name="orientador" value="{{ old('orientador') }}">
-          @error('orientador')<p style="color: red;">{{ $message }}</p>@enderror
+          <label for="advisor">Orientador:</label>
+          <input type="text" id="advisor" name="advisor" value="{{ old('advisor') }}">
+          @error('advisor')<p style="color: red;">{{ $message }}</p>@enderror
         </div>
         <div class="div">
-          <label for="dataEntrada">Data de Entrada:</label>
-          <input type="date" id="dataEntrada" name="dataEntrada" value="{{ old('dataEntrada') }}" readonly>
-          @error('dataEntrada')<p style="color: red;">{{ $message }}</p>@enderror
+          <label for="entry_date">Data de Entrada:</label>
+          <input type="date" id="entry_date" name="entry_date" value="{{ old('entry_date') }}" readonly>
+          @error('entry_date')<p style="color: red;">{{ $message }}</p>@enderror
         </div>
       </div>
 
       <div class="item">
 
         <div class="div">
-          <label for="biometria">Biometria:</label>
-          <input type="file" id="biometria" name="biometria" accept="image/*">
-          @error('biometria')<p style="color: red;">{{ $message }}</p>@enderror
+          <label for="biometry">Biometria:</label>
+          <input type="file" id="biometry" name="biometry" accept="image/*">
+          @error('biometry')<p style="color: red;">{{ $message }}</p>@enderror
         </div>
 
         <div class="div">
 
-          <label for="sexo">Sexo:</label>
-          <select id="sexo" name="sexo">
+          <label for="genre">Sexo:</label>
+          <select id="genre" name="genre">
             <option value="">Selecione</option>
-            <option value="masculino" {{ old('sexo') == 'masculino' ? 'selected' : '' }}>Masculino</option>
-            <option value="feminino" {{ old('sexo') == 'feminino' ? 'selected' : '' }}>Feminino</option>
-            <option value="outro" {{ old('sexo') == 'outro' ? 'selected' : '' }}>Outro</option>
+            <option value="masculino" {{ old('genre') == 'masculino' ? 'selected' : '' }}>Masculino</option>
+            <option value="feminino" {{ old('genre') == 'feminino' ? 'selected' : '' }}>Feminino</option>
+            <option value="outro" {{ old('genre') == 'outro' ? 'selected' : '' }}>Outro</option>
           </select>
-          @error('sexo')<p style="color: red;">{{ $message }}</p>@enderror
+          @error('genre')<p style="color: red;">{{ $message }}</p>@enderror
           
           <h2> Informe-se se o usuário será administrador</h2>
 

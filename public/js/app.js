@@ -1,6 +1,6 @@
 // Apresenta data atual do cadastro no campo dataEntrada no formúlario de cadastro de usuário
 document.addEventListener('DOMContentLoaded', function() { 
-  var dataEntrada = document.getElementById('dataEntrada'); 
+  var dataEntrada = document.getElementById('entry_date'); 
   
   if (!dataEntrada.value) { 
     var hoje = new Date(); 

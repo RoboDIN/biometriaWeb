@@ -24,13 +24,13 @@
     <main> 
       <div class="menu-bar">
         <div class="div-1">
-          <a href="#"><i class="fa-solid fa-house"></i>Página Inicial</a>
+          <a href="home"><i class="fa-solid fa-house"></i>Página Inicial</a>
           <a href="#"><i class="fa-solid fa-list"></i></i>Histórico</a>
           <a href="#"><i class="fa-regular fa-clipboard"></i>Listagem</a>
           <a href="/register"><i class="fa-regular fa-clipboard"></i>Cadastrar usuário</a>
         </div>
         <div class="div-2">
-          <a href="#"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>  
+          <a href="logout"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>  
         </div>
       </div>
       @yield('main') 

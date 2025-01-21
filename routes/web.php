@@ -5,9 +5,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Rotas configurados o fluxo web do sistema  
-Route::get('/', function () {
+Route::get('/home', function () {
     return view('home');
-}); // ->middleware('auth')->name('home');
+})->middleware('auth')->name('home');
 
 // Cadastro do usuario
 Route::get('/register', [UserController::class, 'create'])->name('cadUser');

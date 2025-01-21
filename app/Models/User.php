@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -11,12 +12,12 @@ class User extends Authenticatable
     use HasApiTokens, Notifiable;
 
     protected $fillable = [
-        'name',
         'email',
-        'orientador',
-        'dataEntrada',
-        'biometria',
-        'sexo',
+        'name',
+        'advisor',
+        'entry_date',
+        'biometry',
+        'genre',
         'admin',
         'password',
     ];
@@ -26,14 +27,19 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'name' => 'text',
-        'email' => 'text',
-        'orientador' => 'text',
-        'dataEntrada' => 'date',
-        'sexo' => 'text',
+        'entry_date' => 'date',
         'admin' => 'boolean',
         'password' => 'hashed',
     ];
+
+    // Define o campo `email` como chave primária
+    protected $primaryKey = 'email';
+
+    // Desativa o comportamento de auto-incremento
+    public $incrementing = false;
+
+    // Define o tipo do campo primário como string
+    protected $keyType = 'string';
 
     // Mutator para a senha (garante que a senha será criptografada antes de salvar)
     public function setPasswordAttribute($value)
@@ -45,7 +51,7 @@ class User extends Authenticatable
     public function setBiometriaAttribute($value)
     {
         if (is_file($value)) {
-            $this->attributes['biometria'] = base64_encode(file_get_contents($value)); // Converte para base64
+            $this->attributes['biometry'] = base64_encode(file_get_contents($value)); // Converte para base64
         }
     }
 

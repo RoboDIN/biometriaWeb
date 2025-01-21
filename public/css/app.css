@@ -25,7 +25,7 @@ main .menu-bar {
 
 main .menu-bar .div-1,
 main .menu-bar .div-2 {
-  gap: 1vh;
+  gap: 1.5vh;
   padding: 4vh 2vh;
   margin: 2vh;
   display: flex;

@@ -1,9 +1,12 @@
 <?php
 
+// Formulário de criação de usuários
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -16,26 +19,31 @@ class UserController extends Controller
     {
         // Valida os dados
         $validated = $request->validate([
+            'email' => 'required|email|unique:users',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'orientador' => 'nullable|string|max:255',
-            'dataEntrada' => 'nullable|date',
-            'biometria' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-            'sexo' => 'nullable|in:masculino,feminino,outro',
+            'advisor' => 'nullable|string|max:255',
+            'entry_date' => 'date',
+            'biometry' => 'image|mimes:png,jpg,jpeg|max:2048',
+            'genre' => 'required|in:masculino,feminino,outro',
             'admin' => 'required|boolean',
-            'password' => 'required|string|min:8|confirmed',
         ]);
+
+        if ($request->admin) { 
+            $validated['password'] = $request->validate([ 'password' => 'required|string|min:8|confirmed', ])['password']; 
+        } else { 
+            $validated['password'] = $request->input('password') ?? 'defaultpassword'; 
+        };
 
         // Cria o usuário
         $user = new User($validated);
 
         // Adiciona a biometria (se enviada)
-        if ($request->hasFile('biometria')) {
-            $user->biometria = $request->file('biometria');
+        if ($request->hasFile('biometry')) {
+            $user->biometry = $request->file('biometry');
         }
 
         $user->save();
 
-        return redirect()->route('cadUser')->with('success', 'Usuário cadastrado com sucesso!');
+        return redirect()->route('home')->with('success', 'Usuário cadastrado com sucesso!');
     }
 }
