@@ -21,35 +21,11 @@
           @error('name')<p style="color: red;">{{ $message }}</p>@enderror
         </div>
         <div class="div">
-          <label for="email">E-mail institucional:</label>
-          <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-          @error('email')<p style="color: red;">{{ $message }}</p>@enderror
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="div">
-          <label for="advisor">Orientador:</label>
-          <input type="text" id="advisor" name="advisor" value="{{ old('advisor') }}">
-          @error('advisor')<p style="color: red;">{{ $message }}</p>@enderror
-        </div>
-        <div class="div">
           <label for="entry_date">Data de Entrada:</label>
           <input type="date" id="entry_date" name="entry_date" value="{{ old('entry_date') }}" readonly>
           @error('entry_date')<p style="color: red;">{{ $message }}</p>@enderror
         </div>
-      </div>
-
-      <div class="item">
-
         <div class="div">
-          <label for="biometry">Biometria:</label>
-          <input type="file" id="biometry" name="biometry" accept="image/*">
-          @error('biometry')<p style="color: red;">{{ $message }}</p>@enderror
-        </div>
-
-        <div class="div">
-
           <label for="genre">Sexo:</label>
           <select id="genre" name="genre">
             <option value="">Selecione</option>
@@ -58,23 +34,45 @@
             <option value="outro" {{ old('genre') == 'outro' ? 'selected' : '' }}>Outro</option>
           </select>
           @error('genre')<p style="color: red;">{{ $message }}</p>@enderror
-          
-          <h2> Informe-se se o usuário será administrador</h2>
-
-          <div class="div-1">
-            <input type="checkbox" id="admin" name="admin" value="1" {{ old('admin') == '1' ? 'checked' : '' }}> 
-            <label for="admin_yes">Administrador</label> 
-            @error('admin')<p style="color: red;">{{ $message }}</p>@enderror
-          </div>
-          
-          <div id="div-senha" class="hidden">
+        </div>
+      </div>
+      <div class="item">
+        <div class="div">
+          <label for="email">E-mail institucional:</label>
+          <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+          @error('email')<p style="color: red;">{{ $message }}</p>@enderror
+        </div>
+        <div class="div">
+          <label for="advisor">Nome do Orientador:</label>
+          <input type="text" id="advisor" name="advisor" value="{{ old('advisor') }}">
+          @error('advisor')<p style="color: red;">{{ $message }}</p>@enderror
+        </div>
+      </div>
+      <div class="item">
+        <div class="div">
+          <input type="checkbox" id="admin" name="admin" value="1" {{ old('admin') == '1' ? 'checked' : '' }}> 
+          <label for="admin_yes">Administrador</label> 
+          @error('admin')<p style="color: red;">{{ $message }}</p>@enderror
+        </div>
+        <div id="div-senha" class="hidden">
+          <div class="box">
             <label for="password">Senha:</label>
             <input type="password" id="password" name="password" required>
             @error('password')<p style="color: red;">{{ $message }}</p>@enderror
-
+          </div>
+          <div class="box">
             <label for="password_confirmation">Confirmar Senha:</label>
             <input type="password" id="password_confirmation" name="password_confirmation" required>
           </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="div">
+          <div class="box-digital"></div>
+          <button> Cadastrar Digital </button>
+        </div>
+        <div class="div">
+          <header>Mensagens</header>
         </div>
       </div>
       <button type="submit">Cadastrar</button>

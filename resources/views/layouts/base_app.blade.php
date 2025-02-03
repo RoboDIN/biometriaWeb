@@ -24,13 +24,18 @@
     <main> 
       <div class="menu-bar">
         <div class="div-1">
-          <a href="home"><i class="fa-solid fa-house"></i>Página Inicial</a>
+          <a href="/"><i class="fa-solid fa-house"></i>Página Inicial</a>
           <a href="#"><i class="fa-solid fa-list"></i></i>Histórico</a>
           <a href="#"><i class="fa-regular fa-clipboard"></i>Listagem</a>
           <a href="/register"><i class="fa-regular fa-clipboard"></i>Cadastrar usuário</a>
         </div>
         <div class="div-2">
-          <a href="logout"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>  
+          <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" style="background: none; border: none;">
+              <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </button>
+          </form>
         </div>
       </div>
       @yield('main') 

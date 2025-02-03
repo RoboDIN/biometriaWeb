@@ -16,7 +16,7 @@ main {
 }
 
 main .menu-bar {
-  width: 15%;
+  width: 20%;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -38,15 +38,12 @@ main .menu-bar .div-2 {
 }
 
 main .menu-bar .div-1 a,
-main .menu-bar .div-2 a {
+main .menu-bar .div-2 form button {
   font-size: 2.2vh;
   color: #9CD7D7;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 1vh;
-}
-
-main .container {
-  width: 70%;
+  cursor: pointer;
 }

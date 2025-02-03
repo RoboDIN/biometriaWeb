@@ -30,7 +30,7 @@
             <form action="{{ url('/login') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="email">Registro Acadêmico (RA):</label>
+                    <label for="email">E-mail Institucional:</label>
                     <input type="email" name="email" id="email" required>
                     @error('email')
                         <div class="error">{{ $message }}</div>
