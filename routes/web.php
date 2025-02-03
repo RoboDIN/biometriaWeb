@@ -10,16 +10,10 @@ Route::get('/', function () {
 })->name('home')->middleware('auth');
 
 // Cadastro do usuario
-Route::get('/register', [UserController::class, 'create'])->name('cadUser');
-Route::post('/register', [UserController::class, 'store'])->name('store');
-
-// Rota de leitura de menssagem enviado pelo arduino
-Route::post('/arduino/data', function (Illuminate\Http\Request $request) {
-    $data = $request->input('message');
-    session()->flash('arduinoMessage', $data);
-    return response()->json(['status' => 'success']);
-});
-
+Route::get('/register', [UserController::class, 'create'])->name('user.cadUser');
+Route::post('/register', [UserController::class, 'store'])->name('user.store');
+Route::get('/register/serial', [UserController::class, 'startSerial'])->name('user.startSerial');
+Route::get('/register/messages', [UserController::class, 'fetchMessages'])->name('user.fetchMessages');
 
 require __DIR__ . '/auth.php';
 

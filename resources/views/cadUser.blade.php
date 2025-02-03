@@ -12,7 +12,7 @@
       <p style="color: green;">{{ session('success') }}</p>
     @endif
 
-    <form action="{{ route('store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="item">
         <div class="div">
@@ -69,15 +69,25 @@
       <div class="item">
         <div class="div">
           <div class="box-digital"></div>
-          <button> Cadastrar Digital </button>
+            <button type="button" id="start-serial">Iniciar Leitura</button>
+          </form>        
         </div>
+        <input type="hidden" name="serial_messages" id="serial-messages-input" value="">
         <div class="div">
           <header>Mensagens</header>
+          <div id="serial-messages">
+            @if (isset($messages))
+              @foreach($messages as $message)
+                <p>{{ $message }}</p>
+              @endforeach
+            @endif
+          </div>
         </div>
       </div>
       <button type="submit">Cadastrar</button>
     </form>
   </div>
+
 @endsection
 
 @section('script') {{ asset('js/app.js') }}@endsection
