@@ -1,24 +1,25 @@
 <?php
 
 // Formulário de criação de usuários
-
 namespace App\Http\Controllers;
 
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use phpSerial;
+use Illuminate\Support\Facades\Log;
+
 
 class UserController extends Controller
 {
-    public function create()
-    {
+    public function create() {
         $messages = $this->getMessages();
         return view('cadUser', compact('messages'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         // Valida os dados
         $validated = $request->validate([
             'email' => 'required|email|unique:users',
@@ -53,17 +54,43 @@ class UserController extends Controller
 
         // Adiciona as mensagens da porta serial ao campo oculto
         if ($request->has('serial_messages')) {
-            Storage::put('public/serial_messages.txt', $request->input('serial-messages-input'));
+            Storage::put('public/serial_messages.txt', 
+            $request->input('serial-messages-input'));
         }
 
         return redirect()->route('home')->with('success', 'Usuário cadastrado com sucesso!');
+    }
+
+    public function executarScript(Request $request) {
+
+        try {
+            $output = ''; 
+    
+            // Executa o script Python
+            $process = new Process(['python', 'C:\\Users\\lucax\\Desktop\\Projetos RoboDIN\\biometriaWeb\\scripts\\read_arduino.py']);
+            $process->run();
+    
+            // Verifica se o comando foi bem-sucedido
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+    
+            $output = $process->getOutput();
+    
+            return response()->json($output);
+
+        } catch (Exception $e) {
+            // Retorna o erro em caso de falha
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+       
     }
 
 
     public function startSerial() {
         exec('php artisan serial:read > /dev/null 2>&1 &');
         $this->fetchMessages();
-        return redirect()->route('user.create');
+        return redirect()->route('user.cadUser');
     }
 
     public function fetchMessages() {

@@ -13,4 +13,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
     }
 
+    protected $commands = [
+        \App\Console\Commands\ReadSerialPython::class,
+    ];
+
 }

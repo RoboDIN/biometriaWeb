@@ -13,7 +13,7 @@ class ReadSerialPort extends Command
     public function handle()
     {
         $serial = new Serial;
-        $serial->deviceSet('COM3'); // Altere para a porta correta
+        $serial->deviceSet('COM10'); // Altere para a porta correta
         $serial->confBaudRate(57600);
         $serial->confParity("none");
         $serial->confCharacterLength(8);

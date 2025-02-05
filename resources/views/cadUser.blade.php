@@ -66,26 +66,29 @@
           </div>
         </div>
       </div>
-      <div class="item">
-        <div class="div">
-          <div class="box-digital"></div>
-            <button type="button" id="start-serial">Iniciar Leitura</button>
-          </form>        
-        </div>
-        <input type="hidden" name="serial_messages" id="serial-messages-input" value="">
-        <div class="div">
-          <header>Mensagens</header>
-          <div id="serial-messages">
-            @if (isset($messages))
-              @foreach($messages as $message)
-                <p>{{ $message }}</p>
-              @endforeach
-            @endif
-          </div>
-        </div>
-      </div>
       <button type="submit">Cadastrar</button>
     </form>
+
+    <div class="item">
+      <div class="div">
+        <div class="box-digital"></div>
+          <form id="form-executar-script">
+            <button type="submit">Iniciar leitura</button>
+          </form>
+          {{-- <button type="button" id="start-serial">Iniciar Leitura</button>        --}}
+      </div>
+      {{-- <input type="hidden" name="serial_messages" id="serial-messages-input" value=""> --}}
+      <div class="div">
+        <header>Mensagens</header>
+        <div id="messages">
+          {{-- @if (isset($messages))
+            @foreach($messages as $message)
+              <p>{{ $message }}</p>
+            @endforeach
+          @endif --}}
+        </div>
+      </div>
+    </div>
   </div>
 
 @endsection
