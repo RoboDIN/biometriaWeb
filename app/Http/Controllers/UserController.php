@@ -7,9 +7,9 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Exception;
 use App\Models\User;
 use phpSerial;
-use Illuminate\Support\Facades\Log;
 
 
 class UserController extends Controller
@@ -63,26 +63,34 @@ class UserController extends Controller
 
     public function executarScript(Request $request) {
 
-        try {
-            $output = ''; 
-    
-            // Executa o script Python
-            $process = new Process(['python', 'C:\\Users\\lucax\\Desktop\\Projetos RoboDIN\\biometriaWeb\\scripts\\read_arduino.py']);
-            $process->run();
-    
-            // Verifica se o comando foi bem-sucedido
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-    
-            $output = $process->getOutput();
-    
-            return response()->json($output);
+        $port = "\\\\.\\COM10"; // No Windows, altere para "COM3"
+        $baudRate = 9600; // Taxa de transmissão, deve ser a mesma do Arduino
 
-        } catch (Exception $e) {
-            // Retorna o erro em caso de falha
-            return response()->json(['error' => $e->getMessage()], 500);
+        // Configurações da porta serial (apenas para Linux/macOS)
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            shell_exec("stty -F {$port} {$baudRate} raw -echo");
         }
+
+        // Abre a porta serial
+        $handle = @fopen($port, "r");
+
+        if (!$handle) {
+            return response()->json(['error' => 'Não foi possível abrir a porta serial'], 500);
+        }
+
+        // Lê os dados da porta serial
+        $data = fread($handle, 1024); // Lê até 1024 bytes
+
+        // Fecha a conexão
+        fclose($handle);
+
+        // Limpa caracteres não imprimíveis
+        $data = mb_convert_encoding($data, 'UTF-8', 'auto');
+        $data = preg_replace('/[^\x20-\x7E]/', '', $data);
+
+        $data = str_replace(["\r\n", "\n", "\r"], "<br>", $data);
+
+        return response()->json(['dados' => trim($data)]);
        
     }
 

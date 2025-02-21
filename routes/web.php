@@ -12,13 +12,16 @@ Route::get('/', function () {
 // Cadastro do usuario
 Route::get('/register', [UserController::class, 'create'])->name('user.cadUser');
 Route::post('/register', [UserController::class, 'store'])->name('user.store');
-Route::post('/executar-script', [UserController::class, 'executarScript'])->name('executar.script');
+Route::post('/executar-script', [UserController::class, 'executarScript'])->name('executarScript');
 
 
 Route::get('/register/serial', [UserController::class, 'startSerial'])->name('user.startSerial');
 Route::get('/register/messages', [UserController::class, 'fetchMessages'])->name('user.fetchMessages');
 
 require __DIR__ . '/auth.php';
+
+
+
 
 
 

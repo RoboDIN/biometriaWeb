@@ -9,7 +9,7 @@ try:
   arduino = serial.Serial(porta, baudrate, timeout=2)  
   print("Conexao estabelecida!") 
 
-  linha = arduino.readline().decode('UTF-8', errors='ignore').strip()  
+  linha = arduino.readline().decode('utf-8', errors='ignore').strip()  
 
   if linha:
     print(f"Mensagem recebida: {linha}")  

@@ -73,14 +73,12 @@ $(document).ready(function() {
       },
       success: function(response) {
         console.log(response); 
-        // Sucesso - Exibe a saída do script Python
-        $('#messages').html('<p>' + response + '</p>');
+        // Adiciona a nova linha à página
+        $('#messages').html('<p>' + response.dados + '</p>');
       },
       error: function(xhr, status, error) {
-        console.log(xhr.responseJSON); 
-        var errorMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Erro desconhecido';
-        // Erro - Exibe a mensagem de erro
-        $('#messages').html('<p style="color:red;">Erro: ' +  errorMsg + '</p>');
+        console.log(xhr.responseText); // Exibe a saída do Laravel no console
+        $('#messages').html('<p>Erro ao executar o script.</p>');
       }
     });
   });
