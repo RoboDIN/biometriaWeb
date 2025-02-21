@@ -63,34 +63,37 @@ class UserController extends Controller
 
     public function executarScript(Request $request) {
 
-        $port = "\\\\.\\COM10"; // No Windows, altere para "COM3"
-        $baudRate = 9600; // Taxa de transmissão, deve ser a mesma do Arduino
+        $port = "\\\\.\\COM10";
+        $baudRate = 115200; 
 
-        // Configurações da porta serial (apenas para Linux/macOS)
-        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-            shell_exec("stty -F {$port} {$baudRate} raw -echo");
-        }
-
-        // Abre a porta serial
         $handle = @fopen($port, "r");
 
         if (!$handle) {
             return response()->json(['error' => 'Não foi possível abrir a porta serial'], 500);
         }
 
-        // Lê os dados da porta serial
-        $data = fread($handle, 1024); // Lê até 1024 bytes
+        // Definir o tempo limite para esperar dados (5 segundos)
+        $timeout = 1;  // Tempo em segundos
+        $read = [$handle];
+        $write = null;
+        $except = null;
 
-        // Fecha a conexão
-        fclose($handle);
+        // Verifica se há dados disponíveis para ler dentro do tempo limite
+        if (stream_select($read, $write, $except, $timeout)) {
+            // Há dados disponíveis, agora podemos ler
+            $data = fgets($handle, 1024);  // Lê até 1024 bytes
+            fclose($handle);
 
-        // Limpa caracteres não imprimíveis
-        $data = mb_convert_encoding($data, 'UTF-8', 'auto');
-        $data = preg_replace('/[^\x20-\x7E]/', '', $data);
+            // Limpa caracteres não imprimíveis
+            $data = mb_convert_encoding($data, 'UTF-8', 'auto');
+            $data = trim(preg_replace('/[^\x20-\x7E]/', '', $data));
 
-        $data = str_replace(["\r\n", "\n", "\r"], "<br>", $data);
-
-        return response()->json(['dados' => trim($data)]);
+            return response()->json(['dados' => trim($data)]);
+        } else {
+            // Nenhum dado foi recebido dentro do tempo limite
+            fclose($handle);
+            return response()->json(['error' => 'Sem dados disponíveis na porta serial'], 500);
+        }
        
     }
 
