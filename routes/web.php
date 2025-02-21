@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Rotas configurados o fluxo web do sistema  
@@ -12,11 +11,7 @@ Route::get('/', function () {
 // Cadastro do usuario
 Route::get('/register', [UserController::class, 'create'])->name('user.cadUser');
 Route::post('/register', [UserController::class, 'store'])->name('user.store');
-Route::post('/executar-script', [UserController::class, 'executarScript'])->name('executarScript');
-
-
-Route::get('/register/serial', [UserController::class, 'startSerial'])->name('user.startSerial');
-Route::get('/register/messages', [UserController::class, 'fetchMessages'])->name('user.fetchMessages');
+Route::post('/executar-script', [UserController::class, 'executarScript'])->name('user.executarScript');
 
 require __DIR__ . '/auth.php';
 

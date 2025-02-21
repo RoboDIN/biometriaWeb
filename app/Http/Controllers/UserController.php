@@ -15,8 +15,7 @@ use phpSerial;
 class UserController extends Controller
 {
     public function create() {
-        $messages = $this->getMessages();
-        return view('cadUser', compact('messages'));
+        return view('cadUser');
     }
 
     public function store(Request $request) {
@@ -72,7 +71,6 @@ class UserController extends Controller
             return response()->json(['error' => 'Não foi possível abrir a porta serial'], 500);
         }
 
-        // Definir o tempo limite para esperar dados (5 segundos)
         $timeout = 1;  // Tempo em segundos
         $read = [$handle];
         $write = null;
@@ -96,67 +94,4 @@ class UserController extends Controller
         }
        
     }
-
-
-    public function startSerial() {
-        exec('php artisan serial:read > /dev/null 2>&1 &');
-        $this->fetchMessages();
-        return redirect()->route('user.cadUser');
-    }
-
-    public function fetchMessages() {
-        $messages = $this->getMessages();
-        return response()->json($messages);
-    }
-
-    private function getMessages() {
-        $filePath = storage_path('app/public/serial_messages.txt');
-        if (file_exists($filePath)) {
-            $messages = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        } else {
-            $messages = [];
-        }
-        return $messages;
-    }
-
-
-    // private function captureBiometric() {
-
-    //     // Inicializa a comunicação serial com o Arduino
-    //     $serial = new phpSerial();
-    //     $serial->deviceSet("COM3");                 // Porta de serial conectado o arduino
-    //     $serial->confBaudRate(9600);                // Configuração de tava de baud para comunicação
-    //     $serial->confParity("none");                // Verifica se houve erros em transmissão de dados
-    //     $serial->confCharacterLength(8);            // Define a quantidade de bit que cada caracter é composto
-    //     $serial->confStopBits(1);                   // Indica o térmico de uma unidade de dados 
-    //     $serial->deviceOpen();                      // Abre a porta serial para comunicação 
-
-    //     $serial->sendMessage("CAPTURE_BIOMETRY");   // Sinal de comando para capturar a imagem
-
-    //     $biometricData = $serial->readPort();       // Lê a imagem enviada pelo arduino
-
-    //     $serial->deviceClone();                     // Fecha porta serial
-
-
-    //     if (!$biometricData) {
-    //         return null; 
-    //     }
-
-    //     $image = imagecreatefromstring($biometricData);
-
-    //     // Verificação se é uma imagem válida 
-    //     if ($image === false) {
-    //         return null;
-    //     }
-
-    //     // Salva a imagem como um arquivo PNG
-    //     $imagePath = storage_path('app/public/biometries/' . uniqid() . '.png');
-    //     imagepng($image, $imagePath);
-
-    //     // Libera a memória da imagem
-    //     imagedestroy($image);
-
-    //     return new \Illuminate\Http\File($imagePath); // Retorna o arquivo para ser armazenado
-
-    // }
 }
