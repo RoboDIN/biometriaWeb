@@ -47,3 +47,11 @@ main .menu-bar .div-2 form button {
   gap: 1vh;
   cursor: pointer;
 }
+
+
+main .container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}

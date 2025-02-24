@@ -3,13 +3,9 @@
 // Formulário de criação de usuários
 namespace App\Http\Controllers;
 
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Exception;
 use App\Models\User;
-use phpSerial;
 
 
 class UserController extends Controller

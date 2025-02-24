@@ -29,9 +29,8 @@
       <div class="menu-bar">
         <div class="div-1">
           <a href="/"><i class="fa-solid fa-house"></i>Página Inicial</a>
-          <a href="#"><i class="fa-solid fa-list"></i></i>Histórico</a>
-          <a href="#"><i class="fa-regular fa-clipboard"></i>Listagem</a>
-          <a href="/register"><i class="fa-regular fa-clipboard"></i>Cadastrar usuário</a>
+          <a href="/historico"><i class="fa-solid fa-list"></i></i>Histórico</a>
+          <a href="/membros"><i class="fa-regular fa-clipboard"></i>Membros</a>
         </div>
         <div class="div-2">
           <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -42,7 +41,10 @@
           </form>
         </div>
       </div>
-      @yield('main') 
+      <div class="container">
+        @yield('container') 
+      </div>
+      
     </main> 
     <footer> <!-- Conteúdo do rodapé --> </footer> 
     <script src=@yield('script')></script> 

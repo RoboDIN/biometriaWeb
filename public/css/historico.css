@@ -1,0 +1,11 @@
+h1 {
+  font-size: 30px;
+  text-align: center;
+}
+
+.box {
+  height: 80%;
+  padding: 20px;
+  background-color:#0B3F44;
+  border-radius: 50px;
+}
