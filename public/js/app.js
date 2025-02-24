@@ -60,27 +60,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Habilita leitura da porta serial
 
-$(document).ready(function() {
-  $('#form-executar-script').on('submit', function(e) {
-    e.preventDefault(); // Previne o envio normal do formulário
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById('form-executar-script');
+  const messagesDiv = document.getElementById('messages');
+
+  // Lida com o evento de submit do formulário
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); 
+
+    // Exibe uma mensagem informando que a execução começou
+    messagesDiv.innerHTML = '<p>Iniciando a execução...</p>';
+
+    // Inicia a leitura da serial após o formulário ser enviado
+    const eventSource = new EventSource('/executar-script');
     
-    // Dispara a requisição AJAX
-    $.ajax({
-      url: '/executar-script',  // Rota para o controlador
-      method: 'POST',
-      data: {
-        _token: $('meta[name="csrf-token"]').attr('content')  // Token CSRF para segurança
-      },
-      success: function(response) {
-        console.log(response); 
-        // Adiciona a nova linha à página
-        $('#messages').html('<p>' + response.dados + '</p>');
-      },
-      error: function(xhr, status, error) {
-        console.log(xhr.responseText); // Exibe a saída do Laravel no console
-        $('#messages').html('<p>Erro ao executar o script.</p>');
+    eventSource.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      const message = data.message;
+
+      if (message) {
+        const p = document.createElement('p');
+        p.textContent = message;
+        p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+        messagesDiv.appendChild(p);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        // Fecha a conexão quando a execução for finalizada
+        if (message === 'Execução finalizada pelo Arduino') {
+          eventSource.close();
+        }
       }
-    });
+    };
+
+    eventSource.onerror = function() {
+      console.error("Erro na conexão com a porta serial.");
+      eventSource.close();
+    };
   });
 });
-

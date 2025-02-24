@@ -59,35 +59,68 @@ class UserController extends Controller
     public function executarScript(Request $request) {
 
         $port = "\\\\.\\COM10";
-        $baudRate = 115200; 
+        $baudRate = 57600; 
 
-        $handle = @fopen($port, "r");
+        // Definindo os headers para SSE (Server-Sent Events)
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+
+        $handle = @fopen($port, "r+");
 
         if (!$handle) {
-            return response()->json(['error' => 'Não foi possível abrir a porta serial'], 500);
+            echo "data: " . json_encode(['error' => 'Não foi possível abrir a porta serial']) . "\n\n";
+            ob_flush();
+            flush();
+            return;
         }
 
-        $timeout = 1;  // Tempo em segundos
-        $read = [$handle];
-        $write = null;
-        $except = null;
+        $startCommand = "start\n";
+        fwrite($handle, $startCommand);
+        usleep(100000);
 
-        // Verifica se há dados disponíveis para ler dentro do tempo limite
-        if (stream_select($read, $write, $except, $timeout)) {
-            // Há dados disponíveis, agora podemos ler
-            $data = fgets($handle, 1024);  // Lê até 1024 bytes
-            fclose($handle);
+        echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
+        ob_flush();
+        flush();
 
-            // Limpa caracteres não imprimíveis
-            $data = mb_convert_encoding($data, 'UTF-8', 'auto');
-            $data = trim(preg_replace('/[^\x20-\x7E]/', '', $data));
+        $biometria = '';
 
-            return response()->json(['dados' => trim($data)]);
-        } else {
-            // Nenhum dado foi recebido dentro do tempo limite
-            fclose($handle);
-            return response()->json(['error' => 'Sem dados disponíveis na porta serial'], 500);
+        while (true) {
+            $data = fgets($handle, 1024); // Lê a mensagem do Arduino
+    
+            if ($data !== false) {
+                $data = mb_convert_encoding($data, 'UTF-8', 'auto');
+                $data = trim(preg_replace('/[^\x20-\x7E]/', '', $data));
+    
+                echo "data: " . json_encode(['message' => $data]) . "\n\n";
+                ob_flush();
+                flush();
+
+                if (strpos($data, 'FALHA') !== false) {
+
+                    echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
+                    ob_flush();
+                    flush();
+                    break;
+                }
+    
+                // Para a execução quando receber a mensagem de finalização
+                if (strpos($data, 'FIM') !== false) {
+
+                    $biometria = base64_decode($biometria);  // Se a imagem for base64, você pode decodificar aqui
+
+                    echo "data: " . json_encode(['message' => 'Execução finalizada pelo Arduino']) . "\n\n";
+                    ob_flush();
+                    flush();
+                    break;
+                }
+
+
+            }
+    
+            usleep(100000); 
         }
-       
+    
+       fclose($handle);
     }
 }
