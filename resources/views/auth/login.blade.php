@@ -26,19 +26,23 @@
     </header>
     <main>
         <div class="login-container">
-            <h1>Login</h1>
+            <h1>Login Sensor Biométrico</h1>
             <form action="{{ url('/login') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="email">E-mail Institucional:</label>
-                    <input type="email" name="email" id="email" required>
+                    <div class="box">
+                        <label for="email">E-mail Institucional:</label>
+                        <input type="email" name="email" id="email" required>
+                    </div>
                     @error('email')
                         <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="password">Senha: </label>
-                    <input type="password" name="password" id="password" required>
+                    <div class="box">
+                        <label for="password">Senha: </label>
+                        <input type="password" name="password" id="password" required>
+                    </div>
                     @error('password')
                         <div class="error">{{ $message }}</div>
                     @enderror

@@ -4,7 +4,8 @@
   <head> 
 
     <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Fonts Google  --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +15,9 @@
     {{-- Ícones --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     
+    {{-- Chamadas AJAX --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href=@yield('css')>
 
@@ -25,9 +29,8 @@
       <div class="menu-bar">
         <div class="div-1">
           <a href="/"><i class="fa-solid fa-house"></i>Página Inicial</a>
-          <a href="#"><i class="fa-solid fa-list"></i></i>Histórico</a>
-          <a href="#"><i class="fa-regular fa-clipboard"></i>Listagem</a>
-          <a href="/register"><i class="fa-regular fa-clipboard"></i>Cadastrar usuário</a>
+          <a href="/historico"><i class="fa-solid fa-list"></i></i>Histórico</a>
+          <a href="/membros"><i class="fa-regular fa-clipboard"></i>Membros</a>
         </div>
         <div class="div-2">
           <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -38,7 +41,10 @@
           </form>
         </div>
       </div>
-      @yield('main') 
+      <div class="container">
+        @yield('container') 
+      </div>
+      
     </main> 
     <footer> <!-- Conteúdo do rodapé --> </footer> 
     <script src=@yield('script')></script> 
