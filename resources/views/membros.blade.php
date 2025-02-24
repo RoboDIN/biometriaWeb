@@ -10,7 +10,7 @@
       <input type="search" name="name" placeholder="Pesquisar">
       <button type="submit"><i ty class="fa-solid fa-magnifying-glass"></i></button>
     </form>
-    <a href="/user.cadUser">Cadastrar +</a>
+    <a href="{{ route('user.cadUser') }}">Cadastrar +</a>
   </div>
   <div class="list-box">
     <h1> Resultado vai aquiii</h1>
