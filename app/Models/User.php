@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+    protected $table = 'users'; // Nome da tabela no banco de dados
+    
     protected $fillable = [
         'email',
         'name',
@@ -24,6 +26,7 @@ class User extends Authenticatable
 
     protected $hidden = [
         'password',
+        'biometry',
     ];
 
     protected $casts = [

@@ -14,6 +14,15 @@ class UserController extends Controller
         return view('cadUser');
     }
 
+    public function index()
+    {
+        // Busca todos os usuários, selecionando apenas a coluna "name"
+        $users = User::select('name')->get();
+
+        // Passa os usuários para a view
+        return view('membros', compact('users'));
+    }
+
     public function store(Request $request) {
         // Valida os dados
         $validated = $request->validate([

@@ -9,9 +9,10 @@ Route::get('/', function () {
     return view('home');
 })->name('home')->middleware('auth');
 
-Route::get('/membros', function () {
-    return view('membros');
-})->name('membros')->middleware('auth');
+// Route::get('/membros', function () {
+//     return view('membros');
+// })->name('membros')->middleware('auth');
+Route::get('/membros', [UserController::class, 'index'])->name('membros.index');
 
 Route::get('/historico', function () {
     return view('historico');

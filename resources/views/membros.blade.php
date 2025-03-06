@@ -14,6 +14,11 @@
   </div>
   <div class="list-box">
     <h1> Resultado vai aquiii</h1>
+    <ul>
+      @foreach($users as $user)
+        <li>{{ $user->name }}</li>
+      @endforeach
+    </ul>
   </div>
 
 
