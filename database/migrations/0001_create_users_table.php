@@ -10,8 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-
-            $table->string('email')->primary();
+            $table->string('email')->primary(); 
             $table->string('name');
             $table->string('advisor'); 
             $table->timestamp('entry_date')->nullable();
@@ -20,7 +19,11 @@ return new class extends Migration
             $table->boolean('admin')->default(false); 
             $table->string('password')->unique();
             $table->timestamps();
+    
+            // Garantir que o motor é InnoDB
+            $table->engine = 'InnoDB';
         });
+      
     }
 
     public function down(): void
