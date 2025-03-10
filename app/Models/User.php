@@ -48,16 +48,16 @@ class User extends Authenticatable
     }
 
     // Mutator para salvar a imagem como base64
-    public function setBiometriaAttribute($value)
-    {
-        if (is_file($value)) {
-            $this->attributes['biometry'] = base64_encode(file_get_contents($value)); // Converte para base64
-        }
-    }
+    // public function setBiometriaAttribute($value)
+    // {
+    //     if (is_file($value)) {
+    //         $this->attributes['biometry'] = base64_encode(file_get_contents($value)); // Converte para base64
+    //     }
+    // }
 
-    // Acessor para recuperar a imagem como base64
-    public function getBiometriaAttribute($value)
-    {
-        return $value ? 'data:image/png;base64,' . $value : null; // Retorna como base64 para exibição
-    }
+    // // Acessor para recuperar a imagem como base64
+    // public function getBiometriaAttribute($value)
+    // {
+    //     return $value ? 'data:image/png;base64,' . $value : null; // Retorna como base64 para exibição
+    // }
 }

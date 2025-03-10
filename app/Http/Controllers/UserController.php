@@ -21,37 +21,23 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'advisor' => 'nullable|string|max:255',
             'entry_date' => 'date',
-            'biometry' => 'image|mimes:png,jpg,jpeg|max:2048',
+            'biometry' => 'required|string',
             'genre' => 'required|in:masculino,feminino,outro',
-            'admin' => 'required|boolean',
+            'admin' => 'boolean',
         ]);
 
         if ($request->admin) { 
             $validated['password'] = $request->validate([ 'password' => 'required|string|min:8|confirmed', ])['password']; 
         } else { 
-            $validated['password'] = $request->input('password') ?? 'defaultpassword'; 
+            $validated['password'] = $request->input('password') ?? ''; 
         };
 
         // Cria o usuário
         $user = new User($validated);
 
-        // $biometricImage = $this->captureBiometric();
+        $user->biometry = $biometria;
 
-        // // Adiciona a biometria (se enviada)
-        // if ($biometricImage) {
-
-        //     $imageContent = file_get_contents($biometricImage->getRealPath());
-        //     $base64Image = base64_encode($imageContent);
-        //     $user->biometry = $base64Image;
-        // }
-
-        $user->save();
-
-        // Adiciona as mensagens da porta serial ao campo oculto
-        if ($request->has('serial_messages')) {
-            Storage::put('public/serial_messages.txt', 
-            $request->input('serial-messages-input'));
-        }
+        $user.save();
 
         return redirect()->route('home')->with('success', 'Usuário cadastrado com sucesso!');
     }
@@ -82,9 +68,7 @@ class UserController extends Controller
         echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
         ob_flush();
         flush();
-
-        $biometria = '';
-
+        
         while (true) {
             $data = fgets($handle, 1024); // Lê a mensagem do Arduino
     
@@ -92,30 +76,28 @@ class UserController extends Controller
                 $data = mb_convert_encoding($data, 'UTF-8', 'auto');
                 $data = trim(preg_replace('/[^\x20-\x7E]/', '', $data));
     
-                echo "data: " . json_encode(['message' => $data]) . "\n\n";
-                ob_flush();
-                flush();
 
                 if (strpos($data, 'FALHA') !== false) {
-
                     echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
                     ob_flush();
                     flush();
                     break;
-                }
-    
-                // Para a execução quando receber a mensagem de finalização
-                if (strpos($data, 'FIM') !== false) {
 
-                    $biometria = base64_decode($biometria);  // Se a imagem for base64, você pode decodificar aqui
+                } elseif (strpos($data, 'FIM') !== false) {
+                    
+                    echo "biometria: " .json_encode(['biometria' => $biometria]);
+                    echo "data: " . json_encode(['message' => 'FINALIZADO']) . "\n\n";
+                    break;
 
-                    echo "data: " . json_encode(['message' => 'Execução finalizada pelo Arduino']) . "\n\n";
+                } elseif (strpos($data, 'CONCLUIDO') !== false) {
+
+                    $biometria .= $data;
+
+                } else {
+                    echo "data: " . json_encode(['message' => $data]) . "\n\n";
                     ob_flush();
                     flush();
-                    break;
                 }
-
-
             }
     
             usleep(100000); 

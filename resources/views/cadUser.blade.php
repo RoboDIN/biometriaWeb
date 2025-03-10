@@ -63,6 +63,9 @@
           <input type="password" id="password_confirmation" name="password_confirmation" required>
         </div>
       </div>
+      @if (!empty($biometria))
+       <input type="hidden" name="biometry" value="{{ $biometria }}">   
+      @endif
     </div>
     <button type="submit">Cadastrar</button>
   </form>
