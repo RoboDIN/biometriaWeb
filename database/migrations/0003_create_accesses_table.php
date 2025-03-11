@@ -12,17 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('accesses', function (Blueprint $table) {
-            $table->id('cod_access'); // Chave primária autoincrementável
-            $table->string('id_email', 100); // Chave estrangeira para o email do usuário
-            $table->date('data'); // Data do acesso
-            $table->time('hora'); // Hora do acesso
-            $table->timestamps(); // Colunas created_at e updated_at
+            $table->id('cod_access');
+            $table->string('id_email', 255); 
+            $table->date('data');
+            $table->time('hora');
+            $table->timestamps();
 
-            // Chave estrangeira referenciando a tabela usuarios
+            // Chave estrangeira referenciando users.email
             $table->foreign('id_email')
-                  ->references('cod_email')
-                  ->on('members')
-                  ->onDelete('cascade'); // Se o usuário for deletado, seus acessos também serão
+                  ->references('email') // Coluna em users
+                  ->on('users')         // Tabela users
+                  ->onDelete('cascade');
+                  
+            $table->engine = 'InnoDB';
         });
     }
 
