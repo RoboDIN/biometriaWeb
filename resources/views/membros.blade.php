@@ -16,7 +16,11 @@
     <h1> Resultado vai aquiii</h1>
     <ul>
       @foreach($users as $user)
-        <li>{{ $user->name }}</li>
+        <li>
+          {{ $user->name }}
+          <button type="button">Editar</button>
+          <button type="button">Excluir</button>
+        </li>
       @endforeach
     </ul>
   </div>

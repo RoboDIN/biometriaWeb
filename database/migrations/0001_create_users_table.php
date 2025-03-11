@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamp('entry_date')->nullable();
             $table->binary('biometry')->nullable(); 
             $table->string('genre'); 
-            $table->boolean('admin')->default(false); 
+            $table->boolean('is_admin')->default(false); 
             $table->string('password')->unique();
             $table->timestamps();
         });

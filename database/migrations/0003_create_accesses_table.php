@@ -18,11 +18,10 @@ return new class extends Migration
             $table->time('hora'); // Hora do acesso
             $table->timestamps(); // Colunas created_at e updated_at
 
-            // Chave estrangeira referenciando a tabela usuarios
+            // Chave estrangeira referenciando a tabela users
             $table->foreign('id_email')
-                  ->references('cod_email')
-                  ->on('members')
-                  ->onDelete('cascade'); // Se o usuário for deletado, seus acessos também serão
+                  ->references('email')
+                  ->on('users');
         });
     }
 
