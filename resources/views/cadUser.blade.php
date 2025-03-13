@@ -48,9 +48,9 @@
     </div>
     <div class="item">
       <div class="div">
-        <input type="checkbox" id="admin" name="admin" value="1" {{ old('admin') == '1' ? 'checked' : '' }}> 
+        <input type="checkbox" id="is_admin" name="is_admin" value="1" {{ old('is_admin') == '1' ? 'checked' : '' }}> 
         <label for="admin_yes">Administrador</label> 
-        @error('admin')<p style="color: red;">{{ $message }}</p>@enderror
+        @error('is_dmin')<p style="color: red;">{{ $message }}</p>@enderror
       </div>
       <div id="div-senha" class="hidden">
         <div class="box">

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Habilita o campo senha e confirma senha se o checkbox 'administrador' for pressionado 
 document.addEventListener('DOMContentLoaded', function() {
-  var adminCheckbox = document.getElementById('admin');
+  var adminCheckbox = document.getElementById('is_admin');
   var adminFields = document.getElementById('div-senha');
 
   function toggleAdminFields() { 

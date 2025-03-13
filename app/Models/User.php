@@ -20,7 +20,7 @@ class User extends Authenticatable
         'entry_date',
         'biometry',
         'genre',
-        'admin',
+        'is_admin',
         'password',
     ];
 
@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'entry_date' => 'date',
-        'admin' => 'boolean',
+        'is_admin' => 'boolean',
         'password' => 'hashed',
     ];
 
@@ -49,18 +49,4 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value); // Criptografa a senha com bcrypt
     }
-
-    // Mutator para salvar a imagem como base64
-    // public function setBiometriaAttribute($value)
-    // {
-    //     if (is_file($value)) {
-    //         $this->attributes['biometry'] = base64_encode(file_get_contents($value)); // Converte para base64
-    //     }
-    // }
-
-    // // Acessor para recuperar a imagem como base64
-    // public function getBiometriaAttribute($value)
-    // {
-    //     return $value ? 'data:image/png;base64,' . $value : null; // Retorna como base64 para exibição
-    // }
 }

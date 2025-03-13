@@ -24,15 +24,19 @@ class UserController extends Controller
     }
 
     public function store(Request $request) {
+
+        // Cria o usuário
+        $user = new User();
+        
         // Valida os dados
         $validated = $request->validate([
             'email' => 'required|email|unique:users',
             'name' => 'required|string|max:255',
             'advisor' => 'nullable|string|max:255',
             'entry_date' => 'date',
-            'biometry' => 'required|string',
+            'biometry' => 'string',
             'genre' => 'required|in:masculino,feminino,outro',
-            'admin' => 'boolean',
+            'is_admin' => 'boolean',
         ]);
 
         if ($request->admin) { 
@@ -41,12 +45,9 @@ class UserController extends Controller
             $validated['password'] = $request->input('password') ?? ''; 
         };
 
-        // Cria o usuário
-        $user = new User($validated);
-
-        $user->biometry = $biometria;
-
-        $user.save();
+        // $user->biometry = $biometria;
+        $user->fill($validated);
+        $user->save();
 
         return redirect()->route('home')->with('success', 'Usuário cadastrado com sucesso!');
     }
