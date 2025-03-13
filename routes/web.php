@@ -29,7 +29,7 @@ Route::get('/search', [MembroController::class, 'search'])->name('membro.search'
 // Cadastro do usuario
 Route::get('/register', [UserController::class, 'create'])->name('user.cadUser');
 Route::post('/register', [UserController::class, 'store'])->name('user.store');
-Route::post('/executar-script', [UserController::class, 'executarScript'])->name('user.executarScript');
+Route::get('/executar-script', [UserController::class, 'executarScript']);
 
 require __DIR__ . '/auth.php';
 

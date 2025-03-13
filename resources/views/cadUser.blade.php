@@ -63,27 +63,23 @@
           <input type="password" id="password_confirmation" name="password_confirmation" required>
         </div>
       </div>
+      @if (!empty($biometria))
+       <input type="hidden" name="biometry" value="{{ $biometria }}">   
+      @endif
     </div>
     <button type="submit">Cadastrar</button>
   </form>
 
-  <div class="item">
+  <div class="container-bio">
     <div class="div">
       <div class="box-digital"></div>
-        <form id="form-executar-script">
-          <button type="submit">Iniciar leitura</button>
-        </form>
-        {{-- <button type="button" id="start-serial">Iniciar Leitura</button>        --}}
+      <form id="form-executar-script">
+        <button type="submit">Cadastrar Digital</button>
+      </form>
     </div>
-    {{-- <input type="hidden" name="serial_messages" id="serial-messages-input" value=""> --}}
     <div class="div">
       <header>Mensagens</header>
       <div id="messages">
-        {{-- @if (isset($messages))
-          @foreach($messages as $message)
-            <p>{{ $message }}</p>
-          @endforeach
-        @endif --}}
       </div>
     </div>
   </div>

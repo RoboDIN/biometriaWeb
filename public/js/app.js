@@ -31,56 +31,48 @@ document.addEventListener('DOMContentLoaded', function() {
   adminCheckbox.addEventListener('change', toggleAdminFields);  // Adiciona um evento de alteração ao checkbox
 });
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   document.getElementById('start-serial').addEventListener('click', function() {
-//     fetch('/register/serial').then(response => {
-//       if (response.ok) {
-//         console.log("Comunicação serial iniciada.");
-//       }
-//     });
-//   });
-
-//   function fetchMessages() {
-//     fetch('/register/messages').then(response => response.json()).then(messages => {
-//       const messagesContainer = document.getElementById('serial-messages');
-//       const messagesInput = document.getElementById('serial-messages-input');
-//       messagesContainer.innerHTML = '';
-//       messagesInput.value = ''
-//       messages.forEach(message => {
-//         const p = document.createElement('p');
-//         p.textContent = message;
-//         messagesContainer.appendChild(p);
-//         messagesInput.value += message + '\n';
-//       });
-//     });
-//   }
-
-//   setInterval(fetchMessages, 2000); // Atualiza as mensagens a cada 2 segundos
-// });
 
 // Habilita leitura da porta serial
 
-$(document).ready(function() {
-  $('#form-executar-script').on('submit', function(e) {
-    e.preventDefault(); // Previne o envio normal do formulário
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById('form-executar-script');
+  const messagesDiv = document.getElementById('messages');
+
+  // Lida com o evento de submit do formulário
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); 
+
+    // Exibe uma mensagem informando que a execução começou
+    messagesDiv.innerHTML = '<p>Iniciando a execução...</p>';
+
+    // Inicia a leitura da serial após o formulário ser enviado
+    const eventSource = new EventSource('/executar-script');
     
-    // Dispara a requisição AJAX
-    $.ajax({
-      url: '/executar-script',  // Rota para o controlador
-      method: 'POST',
-      data: {
-        _token: $('meta[name="csrf-token"]').attr('content')  // Token CSRF para segurança
-      },
-      success: function(response) {
-        console.log(response); 
-        // Adiciona a nova linha à página
-        $('#messages').html('<p>' + response.dados + '</p>');
-      },
-      error: function(xhr, status, error) {
-        console.log(xhr.responseText); // Exibe a saída do Laravel no console
-        $('#messages').html('<p>Erro ao executar o script.</p>');
+    eventSource.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      const message = data.message;
+
+      if (message) {
+
+        if (message === 'FINALIZADO') {
+          alert('Biometria capturada com sucesso!');
+          eventSource.close();
+        } else {
+
+          const p = document.createElement('p');
+          p.textContent = message;
+          p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+          messagesDiv.appendChild(p);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        }
       }
-    });
+    };
+
+    eventSource.onerror = function() {
+      console.error("Erro na conexão com a porta serial.");
+      eventSource.close();
+    };
   });
 });
-
