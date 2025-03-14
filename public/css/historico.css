@@ -1,11 +1,97 @@
-h1 {
-  font-size: 30px;
-  text-align: center;
+html {
+  height: 100%;
 }
 
-.box {
-  height: 80%;
-  padding: 20px;
-  background-color:#0B3F44;
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+main {
+  height: 100%;
+  display: flex;
+}
+
+main .menu-bar {
+  width: 300px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #2E8C8C;
+}
+
+main .menu-bar .div-1,
+main .menu-bar .div-2 {
+  gap: 1.5vh;
+  padding: 4vh 2vh;
+  margin: 2vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main .menu-bar .div-2 {
+  margin-top: auto;
+  padding-bottom: 7.5vh;
+}
+
+main .menu-bar .div-1 a,
+main .menu-bar .div-2 form button {
+  font-size: 2.2vh;
+  color: #9CD7D7;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  cursor: pointer;
+}
+main .fundo_verde {
+  width: 70%;
+  height: 750px;
+  background-color: #003333;
+  margin-top: 150px;
+  margin-left: 60px;
+  margin-right: 100px;
   border-radius: 50px;
+  overflow-y: auto;
+  white-space: nowrap;
+
+  
+}
+
+main .fundo_verde .nomes {
+  list-style-type: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 50px;
+  overflow-x: auto;
+  color: orangered;
+  
+}
+
+main .fundo_verde .nomes li {
+  margin: 0 20px 20px 20px;
+  padding-left: 30px;
+  background-color: white;
+  width: 90%;
+  border-radius: 40px;
+  white-space: nowrap;
+  overflow-x: auto;
+  position: relative;
+  display: flex;
+  
+}
+main .fundo_verde .nomes li .diahorario{
+  margin-left: auto;
+  white-space: nowrap;
+  padding-right: 20px;
+} 
+
+main .titulo h1 {
+  position: absolute;
+  margin-left: 100px;
+  margin-top: 50px;
+  font-size: 60px;
+  
 }
