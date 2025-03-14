@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Habilita leitura da porta serial
-
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById('form-executar-script');
   const messagesDiv = document.getElementById('messages');

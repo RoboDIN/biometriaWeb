@@ -94,8 +94,17 @@ class UserController extends Controller
                     break;
 
                 } elseif (strpos($data, 'FIM') !== false) {
+
+                    $biometriaBinaria = base64_encode($biometria);
                     
-                    echo "biometria: " .json_encode(['biometria' => $biometria]);
+                    $user = User::find($request->user_id); // Pega o usuário pelo ID
+                    if ($user) {
+                        $user->biometry = $biometriaBinaria;
+                        $user->save();
+                        echo "data: " . json_encode(['message' => 'Biometria salva com sucesso!', 'biometry' => $biometriaBinaria]) . "\n\n";
+                    } else {
+                        echo "data: " . json_encode(['error' => 'Usuário não encontrado']) . "\n\n";
+                    }
                     echo "data: " . json_encode(['message' => 'FINALIZADO']) . "\n\n";
                     break;
 
