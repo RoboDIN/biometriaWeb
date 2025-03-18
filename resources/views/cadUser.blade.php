@@ -48,9 +48,9 @@
     </div>
     <div class="item">
       <div class="div">
-        <input type="checkbox" id="admin" name="admin" value="1" {{ old('admin') == '1' ? 'checked' : '' }}> 
+        <input type="checkbox" id="is_admin" name="is_admin" value="1" {{ old('is_admin') == '1' ? 'checked' : '' }}> 
         <label for="admin_yes">Administrador</label> 
-        @error('admin')<p style="color: red;">{{ $message }}</p>@enderror
+        @error('is_dmin')<p style="color: red;">{{ $message }}</p>@enderror
       </div>
       <div id="div-senha" class="hidden">
         <div class="box">
@@ -63,27 +63,21 @@
           <input type="password" id="password_confirmation" name="password_confirmation" required>
         </div>
       </div>
+      <input type="hidden" name="biometry" id="biometry">
     </div>
     <button type="submit">Cadastrar</button>
   </form>
 
-  <div class="item">
+  <div class="container-bio">
     <div class="div">
       <div class="box-digital"></div>
-        <form id="form-executar-script">
-          <button type="submit">Iniciar leitura</button>
-        </form>
-        {{-- <button type="button" id="start-serial">Iniciar Leitura</button>        --}}
+      <form id="form-executar-script">
+        <button type="submit">Cadastrar Digital</button>
+      </form>
     </div>
-    {{-- <input type="hidden" name="serial_messages" id="serial-messages-input" value=""> --}}
     <div class="div">
       <header>Mensagens</header>
       <div id="messages">
-        {{-- @if (isset($messages))
-          @foreach($messages as $message)
-            <p>{{ $message }}</p>
-          @endforeach
-        @endif --}}
       </div>
     </div>
   </div>
