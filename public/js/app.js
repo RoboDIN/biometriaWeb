@@ -50,10 +50,13 @@ document.addEventListener("DOMContentLoaded", function() {
     eventSource.onmessage = function(event) {
       const data = JSON.parse(event.data);
       const message = data.message;
+      const biometria = data.biometria;
 
       if (message) {
 
         if (message === 'FINALIZADO') {
+          
+          document.getElementById('biometry').value = biometria;
           alert('Biometria capturada com sucesso!');
           eventSource.close();
         } else {

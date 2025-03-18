@@ -34,7 +34,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'advisor' => 'nullable|string|max:255',
             'entry_date' => 'date',
-            'biometry' => 'string',
+            'biometry' => 'required',
             'genre' => 'required|in:masculino,feminino,outro',
             'is_admin' => 'boolean',
         ]);
@@ -45,9 +45,9 @@ class UserController extends Controller
             $validated['password'] = $request->input('password') ?? ''; 
         };
 
-        // $user->biometry = $biometria;
         $user->fill($validated);
         $user->save();
+    
 
         return redirect()->route('home')->with('success', 'Usuário cadastrado com sucesso!');
     }
@@ -78,6 +78,8 @@ class UserController extends Controller
         echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
         ob_flush();
         flush();
+
+        $biometria = '';
         
         while (true) {
             $data = fgets($handle, 1024); // Lê a mensagem do Arduino
@@ -95,17 +97,11 @@ class UserController extends Controller
 
                 } elseif (strpos($data, 'FIM') !== false) {
 
-                    $biometriaBinaria = base64_encode($biometria);
-                    
-                    $user = User::find($request->user_id); // Pega o usuário pelo ID
-                    if ($user) {
-                        $user->biometry = $biometriaBinaria;
-                        $user->save();
-                        echo "data: " . json_encode(['message' => 'Biometria salva com sucesso!', 'biometry' => $biometriaBinaria]) . "\n\n";
-                    } else {
-                        echo "data: " . json_encode(['error' => 'Usuário não encontrado']) . "\n\n";
-                    }
-                    echo "data: " . json_encode(['message' => 'FINALIZADO']) . "\n\n";
+                    $biometriaBase64 = base64_encode($biometria);
+    
+                    echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
+                    ob_flush();
+                    flush();
                     break;
 
                 } elseif (strpos($data, 'CONCLUIDO') !== false) {

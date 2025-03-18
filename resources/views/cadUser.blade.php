@@ -63,6 +63,7 @@
           <input type="password" id="password_confirmation" name="password_confirmation" required>
         </div>
       </div>
+      <input type="hidden" name="biometry" id="biometry">
     </div>
     <button type="submit">Cadastrar</button>
   </form>
