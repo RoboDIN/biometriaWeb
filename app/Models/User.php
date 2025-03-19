@@ -44,12 +44,6 @@ class User extends Authenticatable
     // Define o tipo do campo primário como string
     protected $keyType = 'string';
 
-    // Mutator para a senha (garante que a senha será criptografada antes de salvar)
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value); // Criptografa a senha com bcrypt
-    }
-
     public function setBiometryAttribute($value)
     {
         // Se o valor recebido for Base64 (string), converta-o para binário antes de armazenar

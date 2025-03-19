@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 // Rotas configurados o fluxo web do sistema  
 Route::get('/', function () {
     return view('home');
-})->name('home')->middleware('auth');
+})->name('home');
 
 // Route::get('/membros', function () {
 //     return view('membros');

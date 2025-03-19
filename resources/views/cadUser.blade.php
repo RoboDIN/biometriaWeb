@@ -48,19 +48,19 @@
     </div>
     <div class="item">
       <div class="div">
-        <input type="checkbox" id="is_admin" name="is_admin" value="1" {{ old('is_admin') == '1' ? 'checked' : '' }}> 
+        <input type="checkbox" id="is_admin" name="is_admin" value="1" {{ old('is_admin', 0) == 1 ? 'checked' : '' }}> 
         <label for="admin_yes">Administrador</label> 
         @error('is_dmin')<p style="color: red;">{{ $message }}</p>@enderror
       </div>
       <div id="div-senha" class="hidden">
         <div class="box">
           <label for="password">Senha:</label>
-          <input type="password" id="password" name="password" required>
+          <input type="password" id="password" name="password">
           @error('password')<p style="color: red;">{{ $message }}</p>@enderror
         </div>
         <div class="box">
           <label for="password_confirmation">Confirmar Senha:</label>
-          <input type="password" id="password_confirmation" name="password_confirmation" required>
+          <input type="password" id="password_confirmation" name="password_confirmation">
         </div>
       </div>
       <input type="hidden" name="biometry" id="biometry">

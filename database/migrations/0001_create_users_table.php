@@ -17,7 +17,7 @@ return new class extends Migration
             $table->binary('biometry')->nullable(); 
             $table->string('genre'); 
             $table->boolean('is_admin')->default(false); 
-            $table->string('password')->unique();
+            $table->string('password')->nullable();
             $table->timestamps();
     
             // Garantir que o motor é InnoDB

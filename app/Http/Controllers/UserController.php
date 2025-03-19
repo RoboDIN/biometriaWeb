@@ -39,13 +39,23 @@ class UserController extends Controller
             'is_admin' => 'boolean',
         ]);
 
-        if ($request->admin) { 
-            $validated['password'] = $request->validate([ 'password' => 'required|string|min:8|confirmed', ])['password']; 
-        } else { 
-            $validated['password'] = $request->input('password') ?? ''; 
-        };
+        if ($request->is_admin) { 
+            $validated += $request->validate([
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+        } else {
+            $validated['password'] = null; 
+        }
 
         $user->fill($validated);
+
+
+        if (!empty($validated['password'])) {
+            $user->password = bcrypt($validated['password']);
+        } else {
+            $user->password = null;
+        }
+
         $user->save();
     
 
@@ -55,7 +65,11 @@ class UserController extends Controller
     public function executarScript(Request $request) {
 
         $port = "\\\\.\\COM10";
-        $baudRate = 57600; 
+        $baudRate = 57600;
+
+        // Reinicia a porta serial antes de abrir
+        exec("mode COM10 BAUD=57600 PARITY=N data=8 stop=1 xon=off");
+        usleep(500000); 
 
         // Definindo os headers para SSE (Server-Sent Events)
         header('Content-Type: text/event-stream');
@@ -71,51 +85,92 @@ class UserController extends Controller
             return;
         }
 
-        $startCommand = "start\n";
-        fwrite($handle, $startCommand);
-        usleep(100000);
-
-        echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
-        ob_flush();
-        flush();
-
-        $biometria = '';
+        $setupComplete = false;
+        $timeout = 5; 
+        $statTime = time();
         
         while (true) {
-            $data = fgets($handle, 1024); // Lê a mensagem do Arduino
+
+            if (time() - $statTime > $timeout) {
+                echo "data: " . json_encode(['message' => 'Cadastro finalizado, verifique a conexão com o sensor!']) . "\n\n";
+                ob_flush();
+                flush();
+                break;
+            }
+
+            $data = fgets($handle, 1024); 
     
             if ($data !== false) {
                 $data = mb_convert_encoding($data, 'UTF-8', 'auto');
-                $data = trim(preg_replace('/[^\x20-\x7E]/', '', $data));
-    
 
-                if (strpos($data, 'FALHA') !== false) {
-                    echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
-                    ob_flush();
-                    flush();
-                    break;
-
-                } elseif (strpos($data, 'FIM') !== false) {
-
-                    $biometriaBase64 = base64_encode($biometria);
-    
-                    echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
-                    ob_flush();
-                    flush();
-                    break;
-
-                } elseif (strpos($data, 'CONCLUIDO') !== false) {
-
-                    $biometria .= $data;
-
-                } else {
-                    echo "data: " . json_encode(['message' => $data]) . "\n\n";
-                    ob_flush();
-                    flush();
+                if (strpos($data, 'READY') !== false || strpos($data, 'OK') !== false) {
+                    $setupComplete = true;
+                    break; // Se o setup for concluído, sai do loop
                 }
             }
-    
+
             usleep(100000); 
+        }
+
+
+        if ($setupComplete) {
+
+            $startCommand = "start\n";
+            fwrite($handle, $startCommand);
+            usleep(100000);
+    
+            echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
+            ob_flush();
+            flush();
+    
+            $biometria = '';
+            $lastDataTime = microtime(true);
+    
+            // Agora que o Arduino está pronto, continua o processo de leitura de dados
+            while (true) {
+                $data = fgets($handle, 1024); // Lê a mensagem do Arduino
+    
+                if ($data !== false) {
+                    $data = mb_convert_encoding($data, 'UTF-8', 'auto');
+    
+                    if (strpos($data, 'FALHA') !== false) {
+                        echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
+                        ob_flush();
+                        flush();
+                        break;
+    
+                    } elseif (strpos($data, 'FIM') !== false) {
+                        $biometriaBase64 = base64_encode($biometria);
+    
+                        echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
+                        ob_flush();
+                        flush();
+                        break;
+    
+                    } elseif (strpos($data, 'CONCLUIDO') !== false) {
+                        $biometria .= $data;
+    
+                    } else {
+                        echo "data: " . json_encode(['message' => $data]) . "\n\n";
+                        ob_flush();
+                        flush();
+                    }
+                }
+    
+                // Verifica se o tempo de inatividade excedeu o timeout
+                if (microtime(true) - $lastDataTime > $timeout) {
+                    echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
+                    ob_flush();
+                    flush();
+                    break;
+                }
+    
+                usleep(100000); // Pausa de 0.1 segundos
+            }
+        } else {
+            echo "data: " . json_encode(['message' => 'Conexão perdida, operacão finalizada!']) . "\n\n";
+            ob_flush();
+            flush();
         }
     
        fclose($handle);

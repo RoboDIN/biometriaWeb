@@ -16,14 +16,22 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   var adminCheckbox = document.getElementById('is_admin');
   var adminFields = document.getElementById('div-senha');
+  var passwordInput = document.getElementById('password');
+  var passwordConfirmInput = document.getElementById('password_confirmation');
 
   function toggleAdminFields() { 
     if (adminCheckbox.checked) { 
       adminFields.classList.remove('hidden'); 
       adminFields.classList.add('flex-container'); 
+
+      passwordInput.setAttribute('required', 'required');
+      passwordConfirmInput.setAttribute('required', 'required');
     } else { 
       adminFields.classList.remove('flex-container'); 
-      adminFields.classList.add('hidden'); 
+      adminFields.classList.add('hidden');
+
+      passwordInput.removeAttribute('required');
+      passwordConfirmInput.removeAttribute('required');
     } 
   } 
   
@@ -37,15 +45,33 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById('form-executar-script');
   const messagesDiv = document.getElementById('messages');
 
+  let eventSource;
+
   // Lida com o evento de submit do formulário
   form.addEventListener('submit', function(e) {
     e.preventDefault(); 
 
+    if(eventSource){
+      return;
+    }
+
     // Exibe uma mensagem informando que a execução começou
-    messagesDiv.innerHTML = '<p>Iniciando a execução...</p>';
+    messagesDiv.innerHTML = '<p>Operação de cadastro inicializada</p>';
 
     // Inicia a leitura da serial após o formulário ser enviado
-    const eventSource = new EventSource('/executar-script');
+    eventSource = new EventSource('/executar-script');
+
+    const timeout = setTimeout(function() {
+      const p = document.createElement('p');
+      p.textContent = "Tempo de execução excedido, tentando novamente.";
+      p.className = 'bg-red-100 text-red-700 p-2 rounded';
+
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      eventSource.close();  // Fecha o EventSource após o timeout
+      eventSource = null; 
+    }, 30000);
     
     eventSource.onmessage = function(event) {
       const data = JSON.parse(event.data);
@@ -56,9 +82,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (message === 'FINALIZADO') {
           
+          clearTimeout(timeout);
+
           document.getElementById('biometry').value = biometria;
           alert('Biometria capturada com sucesso!');
           eventSource.close();
+          eventSource = null;
+          
+
         } else {
 
           const p = document.createElement('p');
@@ -73,8 +104,17 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     eventSource.onerror = function() {
-      console.error("Erro na conexão com a porta serial.");
+      const p = document.createElement('p');
+      p.textContent = "Erro na conexão com a porta serial.";
+      p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
       eventSource.close();
+      eventSource = null;
+      clearTimeout(timeout);
     };
+
   });
 });
