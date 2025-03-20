@@ -1,67 +1,144 @@
-.search-box {
-  width: 100%;
-  display: flex;
-  align-items: center;
- 
+html {
+  height: 100%;
 }
 
-.search-box form {
-  width: 70%;
-  margin: 20px;
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+main {
+  height: 100%;
   display: flex;
-  gap: 20px;
-  justify-content: space-between;
+}
+
+main .menu-bar {
+  width: 300px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #2E8C8C;
+}
+
+main .menu-bar .div-1,
+main .menu-bar .div-2 {
+  gap: 1.5vh;
+  padding: 4vh 2vh;
+  margin: 2vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main .menu-bar .div-2 {
+  margin-top: auto;
+  padding-bottom: 7.5vh;
+}
+
+main .menu-bar .div-1 a,
+main .menu-bar .div-2 form button {
+  font-size: 2.2vh;
+  color: #9CD7D7;
+  text-decoration: none;
+  display: flex;
   align-items: center;
-  border: 1px solid #6F6F6F;
-  border-radius: 40px;
-  padding: 15px;
-  outline: none;
+  gap: 1vh;
   cursor: pointer;
 }
-
-.search-box form:hover {
-  border: 1px solid #007bff;
-}
-
-.search-box form input {
-  width: 80%;
-  font-size: 15px;
-  outline: none;
-  border: none;
-}
-
-.search-box form button {
-  background-color: transparent;
-  border: none;
-}
-
-.search-box form button i {
-  width: 10px;
-  height: 10px;
-}
-
-.search-box a {
-  width: 20%;
-  background-color:#E65510;
-  padding: 15px;
-  font-size: 15px;
-  border: 1px solid #E65510;
-  border-radius: 30px;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-
-}
-
-.search-box a:hover {
-  background-color: #e65410d0;
-  border: 1px solid #e65410d0;
-
-}
-
-.list-box {
-  height: 80%;
-  padding: 20px;
-  background-color:#0B3F44;
+main .fundo_verde {
+  width: 70%;
+  height: 700px;
+  background-color: #003333;
+  margin-top: 200px;
+  margin-left: 60px;
   border-radius: 50px;
+  overflow-y: auto;
+  white-space: nowrap;
+
+  
+}
+
+main .fundo_verde .nomes {
+  list-style-type: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 50px;
+  overflow-x: auto;
+  
+}
+
+main .fundo_verde .nomes li {
+  margin: 20px;
+  padding-left: 30px;
+  background-color: white;
+  width: 830px;
+  border-radius: 40px;
+
+  position: relative;
+  
+}
+main .fundo_verde .nomes li .fa-solid.fa-trash-can {
+  padding-left: 70px;
+  font-size: 50px;
+  color: white;
+  position: absolute;
+  right: -200px;
+  top: 50%;
+  transform: translateY(-50%)
+}
+main .fundo_verde .nomes li .fa-regular.fa-pen-to-square {
+  padding-left: 70px;
+  font-size: 50px;
+  color: white;
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%)
+}
+
+main .cadastrar {
+  position: absolute;
+  width: 210px;
+  height: 80px;
+  background-color: #fa4a0c;
+  margin-left: 1500px;
+  margin-top: 70px;
+  border-radius: 40px;
+  
+}
+
+main .cadastrar h1 {
+  font-family: 'Arial', sans-serif;
+  font-weight: normal;
+  font-size: 33px;
+  padding-left: 15px;
+  color: white;
+
+}
+main .pesquisa{
+  width: 1000px;
+  height: 80px;
+  position: absolute;
+  display: flex;
+  margin-left: 450px;
+  margin-top: 70px;
+
+}
+main .pesquisa .campo-pesquisa {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: white;
+  border-radius: 30px;
+  font-size: 40px;
+}
+
+main .pesquisa .botao-pesquisa {
+  width: 10%;
+  border-radius: 5px;
+}
+main .pesquisa ::placeholder {
+  font-size: 30px;
+  opacity: 0.7;
+  
 }

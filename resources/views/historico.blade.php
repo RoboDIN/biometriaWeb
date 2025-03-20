@@ -23,9 +23,8 @@
       <div class="menu-bar">
         <div class="div-1">
           <a href="/"><i class="fa-solid fa-house"></i>Página Inicial</a>
-          <a href="#"><i class="fa-solid fa-list"></i></i>Histórico</a>
-          <a href="#"><i class="fa-regular fa-clipboard"></i>Membros</a>
-          <a href="/register"><i class="fa-regular fa-clipboard"></i>Cadastrar usuário</a>
+          <a href="{{ route('historico') }}"><i class="fa-solid fa-list"></i></i>Histórico</a>
+          <a href="{{ route('membros.index') }}"><i class="fa-regular fa-clipboard"></i>Membros</a>
         </div>
         <div class="div-2">
           <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -58,6 +57,11 @@
           <li><span class="nome2">João Pedro</span><span class="diahorario">14:34 02/02/2025</span></li></li>
           <li><span class="nome2">Rafael</span><span class="diahorario">14:34 02/02/2025</span></li></li>
         </ul>
+      </div>
+      <div class="cadastrar">
+        <a href="{{ route('user.cadUser') }}">
+          <h1> Cadastrar +</h1>
+        </a>
       </div>
 
 

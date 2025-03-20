@@ -95,3 +95,26 @@ main .titulo h1 {
   font-size: 60px;
   
 }
+
+main .cadastrar {
+  position: absolute;
+  color: white;
+  width: 210px;
+  height: 80px;
+  background-color: #fa4a0c;
+  margin-left: 1500px;
+  margin-top: 50px;
+  border-radius: 40px;
+}
+main .cadastrar:visited{
+  color: white;
+}
+main .cadastrar h1 {
+  font-family: 'Arial', sans-serif;
+  font-weight: normal;
+  font-size: 33px;
+  padding-left: 15px;
+  color: white;
+  text-decoration: none;
+
+}
