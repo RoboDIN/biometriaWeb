@@ -12,18 +12,27 @@
     </form>
     <a href="{{ route('user.cadUser') }}">Cadastrar +</a>
   </div>
-  <div class="list-box">
-    <h1> Resultado vai aquiii</h1>
-    <ul>
-      @foreach($users as $user)
-        <li>
-          {{ $user->name }}
-          <button type="button">Editar</button>
-          <button type="button">Excluir</button>
-        </li>
-      @endforeach
-    </ul>
-  </div>
 
+  <div class="list-box">
+    @if(session('erro'))
+      <div class="alert alert-danger">
+        {{ session('erro') }}
+      </div>
+    @endif
+
+    @if($users->isEmpty())
+      <p>Nenhum usuário encontrado.</p>
+    @else
+      <ul>
+        @foreach($users as $user)
+          <li>
+            {{ $user->name }}
+            <button type="button">Editar</button>
+            <button type="button">Excluir</button>
+          </li>
+        @endforeach
+      </ul>
+    @endif
+  </div>
 
 @endsection
