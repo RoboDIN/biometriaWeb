@@ -20,7 +20,7 @@ class User extends Authenticatable
         'entry_date',
         'biometry',
         'genre',
-        'admin',
+        'is_admin',
         'password',
     ];
 
@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'entry_date' => 'date',
-        'admin' => 'boolean',
+        'is_admin' => 'boolean',
         'password' => 'hashed',
     ];
 
@@ -44,23 +44,21 @@ class User extends Authenticatable
     // Define o tipo do campo primário como string
     protected $keyType = 'string';
 
-    // Mutator para a senha (garante que a senha será criptografada antes de salvar)
-    public function setPasswordAttribute($value)
+    public function setBiometryAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value); // Criptografa a senha com bcrypt
-    }
-
-    // Mutator para salvar a imagem como base64
-    public function setBiometriaAttribute($value)
-    {
-        if (is_file($value)) {
-            $this->attributes['biometry'] = base64_encode(file_get_contents($value)); // Converte para base64
+        // Se o valor recebido for Base64 (string), converta-o para binário antes de armazenar
+        if (is_string($value)) {
+            $this->attributes['biometry'] = base64_decode($value);
+        } else {
+            // Caso o valor já esteja em binário, só armazene diretamente
+            $this->attributes['biometry'] = $value;
         }
     }
 
-    // Acessor para recuperar a imagem como base64
-    public function getBiometriaAttribute($value)
+    // Getter para converter a biometria em Base64 antes de exibir (se necessário)
+    public function getBiometryAttribute($value)
     {
-        return $value ? 'data:image/png;base64,' . $value : null; // Retorna como base64 para exibição
+        // Se quiser enviar os dados como Base64 para o frontend, faça a conversão aqui
+        return base64_encode($value);
     }
 }

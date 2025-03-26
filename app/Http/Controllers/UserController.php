@@ -24,43 +24,40 @@ class UserController extends Controller
     }
 
     public function store(Request $request) {
+
+        // Cria o usuário
+        $user = new User();
+        
         // Valida os dados
         $validated = $request->validate([
             'email' => 'required|email|unique:users',
             'name' => 'required|string|max:255',
             'advisor' => 'nullable|string|max:255',
             'entry_date' => 'date',
-            'biometry' => 'image|mimes:png,jpg,jpeg|max:2048',
+            'biometry' => 'required',
             'genre' => 'required|in:masculino,feminino,outro',
-            'admin' => 'required|boolean',
+            'is_admin' => 'boolean',
         ]);
 
-        if ($request->admin) { 
-            $validated['password'] = $request->validate([ 'password' => 'required|string|min:8|confirmed', ])['password']; 
-        } else { 
-            $validated['password'] = $request->input('password') ?? 'defaultpassword'; 
-        };
+        if ($request->is_admin) { 
+            $validated += $request->validate([
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+        } else {
+            $validated['password'] = null; 
+        }
 
-        // Cria o usuário
-        $user = new User($validated);
+        $user->fill($validated);
 
-        // $biometricImage = $this->captureBiometric();
 
-        // // Adiciona a biometria (se enviada)
-        // if ($biometricImage) {
-
-        //     $imageContent = file_get_contents($biometricImage->getRealPath());
-        //     $base64Image = base64_encode($imageContent);
-        //     $user->biometry = $base64Image;
-        // }
+        if (!empty($validated['password'])) {
+            $user->password = bcrypt($validated['password']);
+        } else {
+            $user->password = null;
+        }
 
         $user->save();
-
-        // Adiciona as mensagens da porta serial ao campo oculto
-        if ($request->has('serial_messages')) {
-            Storage::put('public/serial_messages.txt', 
-            $request->input('serial-messages-input'));
-        }
+    
 
         return redirect()->route('home')->with('success', 'Usuário cadastrado com sucesso!');
     }
@@ -68,35 +65,114 @@ class UserController extends Controller
     public function executarScript(Request $request) {
 
         $port = "\\\\.\\COM10";
-        $baudRate = 115200; 
+        $baudRate = 57600;
 
-        $handle = @fopen($port, "r");
+        // Reinicia a porta serial antes de abrir
+        exec("mode COM10 BAUD=57600 PARITY=N data=8 stop=1 xon=off");
+        usleep(500000); 
+
+        // Definindo os headers para SSE (Server-Sent Events)
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+
+        $handle = @fopen($port, "r+");
 
         if (!$handle) {
-            return response()->json(['error' => 'Não foi possível abrir a porta serial'], 500);
+            echo "data: " . json_encode(['error' => 'Não foi possível abrir a porta serial']) . "\n\n";
+            ob_flush();
+            flush();
+            return;
         }
 
-        $timeout = 1;  // Tempo em segundos
-        $read = [$handle];
-        $write = null;
-        $except = null;
+        $setupComplete = false;
+        $timeout = 5; 
+        $statTime = time();
+        
+        while (true) {
 
-        // Verifica se há dados disponíveis para ler dentro do tempo limite
-        if (stream_select($read, $write, $except, $timeout)) {
-            // Há dados disponíveis, agora podemos ler
-            $data = fgets($handle, 1024);  // Lê até 1024 bytes
-            fclose($handle);
+            if (time() - $statTime > $timeout) {
+                echo "data: " . json_encode(['message' => 'Cadastro finalizado, verifique a conexão com o sensor!']) . "\n\n";
+                ob_flush();
+                flush();
+                break;
+            }
 
-            // Limpa caracteres não imprimíveis
-            $data = mb_convert_encoding($data, 'UTF-8', 'auto');
-            $data = trim(preg_replace('/[^\x20-\x7E]/', '', $data));
+            $data = fgets($handle, 1024); 
+    
+            if ($data !== false) {
+                $data = mb_convert_encoding($data, 'UTF-8', 'auto');
 
-            return response()->json(['dados' => trim($data)]);
+                if (strpos($data, 'READY') !== false || strpos($data, 'OK') !== false) {
+                    $setupComplete = true;
+                    break; // Se o setup for concluído, sai do loop
+                }
+            }
+
+            usleep(100000); 
+        }
+
+
+        if ($setupComplete) {
+
+            $startCommand = "start\n";
+            fwrite($handle, $startCommand);
+            usleep(100000);
+    
+            echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
+            ob_flush();
+            flush();
+    
+            $biometria = '';
+            $lastDataTime = microtime(true);
+    
+            // Agora que o Arduino está pronto, continua o processo de leitura de dados
+            while (true) {
+                $data = fgets($handle, 1024); // Lê a mensagem do Arduino
+    
+                if ($data !== false) {
+                    $data = mb_convert_encoding($data, 'UTF-8', 'auto');
+    
+                    if (strpos($data, 'FALHA') !== false) {
+                        echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
+                        ob_flush();
+                        flush();
+                        break;
+    
+                    } elseif (strpos($data, 'FIM') !== false) {
+                        $biometriaBase64 = base64_encode($biometria);
+    
+                        echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
+                        ob_flush();
+                        flush();
+                        break;
+    
+                    } elseif (strpos($data, 'CONCLUIDO') !== false) {
+                        $biometria .= $data;
+    
+                    } else {
+                        echo "data: " . json_encode(['message' => $data]) . "\n\n";
+                        ob_flush();
+                        flush();
+                    }
+                }
+    
+                // Verifica se o tempo de inatividade excedeu o timeout
+                if (microtime(true) - $lastDataTime > $timeout) {
+                    echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
+                    ob_flush();
+                    flush();
+                    break;
+                }
+    
+                usleep(100000); // Pausa de 0.1 segundos
+            }
         } else {
-            // Nenhum dado foi recebido dentro do tempo limite
-            fclose($handle);
-            return response()->json(['error' => 'Sem dados disponíveis na porta serial'], 500);
+            echo "data: " . json_encode(['message' => 'Conexão perdida, operacão finalizada!']) . "\n\n";
+            ob_flush();
+            flush();
         }
-       
+    
+       fclose($handle);
     }
 }

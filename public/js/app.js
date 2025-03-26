@@ -14,16 +14,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Habilita o campo senha e confirma senha se o checkbox 'administrador' for pressionado 
 document.addEventListener('DOMContentLoaded', function() {
-  var adminCheckbox = document.getElementById('admin');
+  var adminCheckbox = document.getElementById('is_admin');
   var adminFields = document.getElementById('div-senha');
+  var passwordInput = document.getElementById('password');
+  var passwordConfirmInput = document.getElementById('password_confirmation');
 
   function toggleAdminFields() { 
     if (adminCheckbox.checked) { 
       adminFields.classList.remove('hidden'); 
       adminFields.classList.add('flex-container'); 
+
+      passwordInput.setAttribute('required', 'required');
+      passwordConfirmInput.setAttribute('required', 'required');
     } else { 
       adminFields.classList.remove('flex-container'); 
-      adminFields.classList.add('hidden'); 
+      adminFields.classList.add('hidden');
+
+      passwordInput.removeAttribute('required');
+      passwordConfirmInput.removeAttribute('required');
     } 
   } 
   
@@ -31,56 +39,82 @@ document.addEventListener('DOMContentLoaded', function() {
   adminCheckbox.addEventListener('change', toggleAdminFields);  // Adiciona um evento de alteração ao checkbox
 });
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   document.getElementById('start-serial').addEventListener('click', function() {
-//     fetch('/register/serial').then(response => {
-//       if (response.ok) {
-//         console.log("Comunicação serial iniciada.");
-//       }
-//     });
-//   });
-
-//   function fetchMessages() {
-//     fetch('/register/messages').then(response => response.json()).then(messages => {
-//       const messagesContainer = document.getElementById('serial-messages');
-//       const messagesInput = document.getElementById('serial-messages-input');
-//       messagesContainer.innerHTML = '';
-//       messagesInput.value = ''
-//       messages.forEach(message => {
-//         const p = document.createElement('p');
-//         p.textContent = message;
-//         messagesContainer.appendChild(p);
-//         messagesInput.value += message + '\n';
-//       });
-//     });
-//   }
-
-//   setInterval(fetchMessages, 2000); // Atualiza as mensagens a cada 2 segundos
-// });
 
 // Habilita leitura da porta serial
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById('form-executar-script');
+  const messagesDiv = document.getElementById('messages');
 
-$(document).ready(function() {
-  $('#form-executar-script').on('submit', function(e) {
-    e.preventDefault(); // Previne o envio normal do formulário
+  let eventSource;
+
+  // Lida com o evento de submit do formulário
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); 
+
+    if(eventSource){
+      return;
+    }
+
+    // Exibe uma mensagem informando que a execução começou
+    messagesDiv.innerHTML = '<p>Operação de cadastro inicializada</p>';
+
+    // Inicia a leitura da serial após o formulário ser enviado
+    eventSource = new EventSource('/executar-script');
+
+    const timeout = setTimeout(function() {
+      const p = document.createElement('p');
+      p.textContent = "Tempo de execução excedido, tentando novamente.";
+      p.className = 'bg-red-100 text-red-700 p-2 rounded';
+
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      eventSource.close();  // Fecha o EventSource após o timeout
+      eventSource = null; 
+    }, 30000);
     
-    // Dispara a requisição AJAX
-    $.ajax({
-      url: '/executar-script',  // Rota para o controlador
-      method: 'POST',
-      data: {
-        _token: $('meta[name="csrf-token"]').attr('content')  // Token CSRF para segurança
-      },
-      success: function(response) {
-        console.log(response); 
-        // Adiciona a nova linha à página
-        $('#messages').html('<p>' + response.dados + '</p>');
-      },
-      error: function(xhr, status, error) {
-        console.log(xhr.responseText); // Exibe a saída do Laravel no console
-        $('#messages').html('<p>Erro ao executar o script.</p>');
+    eventSource.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      const message = data.message;
+      const biometria = data.biometria;
+
+      if (message) {
+
+        if (message === 'FINALIZADO') {
+          
+          clearTimeout(timeout);
+
+          document.getElementById('biometry').value = biometria;
+          alert('Biometria capturada com sucesso!');
+          eventSource.close();
+          eventSource = null;
+          
+
+        } else {
+
+          const p = document.createElement('p');
+          p.textContent = message;
+          p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+          messagesDiv.appendChild(p);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        }
       }
-    });
+    };
+
+    eventSource.onerror = function() {
+      const p = document.createElement('p');
+      p.textContent = "Erro na conexão com a porta serial.";
+      p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
+      eventSource.close();
+      eventSource = null;
+      clearTimeout(timeout);
+    };
+
   });
 });
-
