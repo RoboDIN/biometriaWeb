@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class MembroController extends Controller
 {
@@ -11,13 +12,28 @@ class MembroController extends Controller
     {
         $termo = $request->input('name');
 
+        $request->session()->put('search_term', $termo);
+
         if (!$termo) {
-            return redirect()->back()->with('erro', 'Digite algo para pesquisar.');
+            $users = User::all();
+        } else {
+            $users = User::where('name', 'LIKE', "%{$termo}%")->get();
         }
 
-        // Aqui você pode buscar no banco de dados, por exemplo:
-        // $resultados = Model::where('campo', 'LIKE', "%{$termo}%")->get();
+        return view('membros', compact('users'));
+    }
 
-        return view('resultado', compact('termo'));
+    public function index(Request $request)
+    {
+        // Verifica se há um termo de pesquisa na sessão
+        $termo = $request->session()->get('search_term', '');
+
+        if ($termo) {
+            $users = User::where('name', 'LIKE', "%{$termo}%")->get();
+        } else {
+            $users = User::all();
+        }
+
+        return view('membros', compact('users'));
     }
 }
