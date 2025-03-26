@@ -93,6 +93,8 @@ main .titulo h1 {
   margin-left: 100px;
   margin-top: 50px;
   font-size: 60px;
+
+  
 }
 
 main .cadastrar {
@@ -106,6 +108,9 @@ main .cadastrar {
   border-radius: 40px;
 }
 
+main .cadastrar:visited{
+  color: white;
+}
 main .cadastrar h1 {
   font-family: 'Arial', sans-serif;
   font-weight: normal;

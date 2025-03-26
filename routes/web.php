@@ -3,14 +3,15 @@
 use App\Http\Controllers\HistoricoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MembroController;
+use App\Http\Controllers\ReadBiometryController;
 use Illuminate\Support\Facades\Route;
-
-
 
 // Rotas configurados o fluxo web do sistema  
 Route::get('/', function () {
-    return view('home');
+  return view('home');
 })->name('home');
+
+// Route::get('/', [ReadBiometryController::class, 'readBiometry']);
 
 // Route::get('/membros', function () {
 //     return view('membros');
@@ -25,6 +26,7 @@ Route::get('/historico', [HistoricoController::class, 'index'])->name('historico
 
 // Buscar usuário cadastrado
 Route::get('/search', [MembroController::class, 'search'])->name('membro.search');
+Route::get('/search/membros', [MembroController::class, 'index'])->name('membro.index');
 
 // Cadastro do usuario
 Route::get('/register', [UserController::class, 'create'])->name('user.cadUser');
