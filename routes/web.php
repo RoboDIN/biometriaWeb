@@ -7,9 +7,8 @@ use App\Http\Controllers\ReadBiometryController;
 use Illuminate\Support\Facades\Route;
 
 // Rotas configurados o fluxo web do sistema  
-Route::get('/', function () {
-  return view('home');
-})->name('home');
+Route::get('/', function () { return view('home'); })->name('home');
+Route::get('/read-arduino', [ReadBiometryController::class, 'readBiometry']);
 
 // Route::get('/', [ReadBiometryController::class, 'readBiometry']);
 

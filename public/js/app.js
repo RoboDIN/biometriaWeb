@@ -118,3 +118,76 @@ document.addEventListener("DOMContentLoaded", function() {
 
   });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  const messagesDiv = document.getElementById('messagesHome');
+  let eventSource;
+  let timeout;
+
+  // Inicia a leitura da serial após o formulário ser enviado
+  function startSerialConnection() {
+
+    if(eventSource){
+      return;
+    }
+
+    eventSource = new EventSource('/read-arduino');
+
+    timeout = setTimeout(function() {
+      const p = document.createElement('p');
+      p.textContent = "Tempo de execução excedido, tentando novamente.";
+      p.className = 'bg-red-100 text-red-700 p-2 rounded';
+
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      eventSource.close();  // Fecha o EventSource após o timeout
+      eventSource = null; 
+
+    }, 3000);
+    
+    eventSource.onmessage = function(event) {
+      const message = data.message;
+
+      if (message) {
+        const p = document.createElement('p');
+        p.textContent = message;
+        p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+        messagesDiv.appendChild(p);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        if (message === "INICIO") {
+          sendRequest();
+        }
+
+        clearTimeout(timeout); 
+      }
+    };
+
+    eventSource.onerror = function() {
+      const p = document.createElement('p');
+      p.textContent = "Erro na conexão com a porta serial.";
+      p.className = 'bg-blue-100 text-blue-700 p-2 rounded';
+
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      // Fechar a conexão atual e tentar reconectar após 5 segundos
+      eventSource.close();
+      eventSource = null;
+
+      clearTimeout(timeout);
+
+      setTimeout(startSerialConnection, 5000); // Tentativa de reconexão após 5 segundos
+    };
+  }
+
+  function sendRequest() {
+    const xhr = new XMLHttpRequest();
+  }
+
+  startSerialConnection();
+
+});

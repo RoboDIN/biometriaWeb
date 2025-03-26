@@ -35,6 +35,13 @@ class ReadBiometryController extends Controller
 
                 if (strpos($data, 'INICIO') !== false) {
 
+                    echo "data: " . json_encode(['message' => $data]) . "\n\n";
+                    ob_flush();
+                    flush();
+                    break;
+
+                } elseif (strpos($data, 'CAPTURE') !== false) {
+
                     $biometria .= $data;
 
                     if ($biometria != '') {
@@ -55,7 +62,9 @@ class ReadBiometryController extends Controller
 
 
                     }
-
+                
+                } elseif (strpos($data, 'FALHA') !== false) {
+                    echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
                     ob_flush();
                     flush();
                     break;
