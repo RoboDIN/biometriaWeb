@@ -3,6 +3,7 @@
 @section('title', 'Membros') 
 @section('css') {{ asset('css/membros.css') }} @endsection
 
+
 @section('container') 
 
   <div class="search-box">

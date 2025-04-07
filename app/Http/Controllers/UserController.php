@@ -89,10 +89,11 @@ class UserController extends Controller
         $timeout = 5; 
         $statTime = time();
         
+        # Verificacao do setup
         while (true) {
 
             if (time() - $statTime > $timeout) {
-                echo "data: " . json_encode(['message' => 'Cadastro finalizado, verifique a conexão com o sensor!']) . "\n\n";
+                echo "data: " . json_encode(['message' => 'Conexão perdida ! Verifique a conexão com o sensor!']) . "\n\n";
                 ob_flush();
                 flush();
                 break;
@@ -112,7 +113,6 @@ class UserController extends Controller
             usleep(100000); 
         }
 
-
         if ($setupComplete) {
 
             $startCommand = "start\n";
@@ -125,48 +125,54 @@ class UserController extends Controller
     
             $biometria = '';
             $lastDataTime = microtime(true);
-    
+
             // Agora que o Arduino está pronto, continua o processo de leitura de dados
             while (true) {
+
                 $data = fgets($handle, 1024); // Lê a mensagem do Arduino
     
                 if ($data !== false) {
+
                     $data = mb_convert_encoding($data, 'UTF-8', 'auto');
-    
+            
                     if (strpos($data, 'FALHA') !== false) {
                         echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
                         ob_flush();
                         flush();
                         break;
     
-                    } elseif (strpos($data, 'FIM') !== false) {
-                        $biometriaBase64 = base64_encode($biometria);
-    
+                    } elseif (strpos($data, 'CAPTURANDO') !== false){
+
+                        echo "data: " . json_encode(['message' => "ENTROUU"]) . "\n\n";
+                        ob_flush();
+                        flush();
+
+                        $IDbiometria = fgets($handle, 1024);
+
+                        echo "data: " . json_encode(['message' => $IDbiometria ]) . "\n\n";
+                        ob_flush();
+                        flush();
+
+                        $biometriaBase64 = base64_encode($IDbiometria);
+
                         echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
                         ob_flush();
                         flush();
                         break;
-    
-                    } elseif (strpos($data, 'CONCLUIDO') !== false) {
-                        $biometria .= $data;
-    
+
                     } else {
+
                         echo "data: " . json_encode(['message' => $data]) . "\n\n";
                         ob_flush();
                         flush();
+                        
                     }
+                
                 }
-    
-                // Verifica se o tempo de inatividade excedeu o timeout
-                if (microtime(true) - $lastDataTime > $timeout) {
-                    echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
-                    ob_flush();
-                    flush();
-                    break;
-                }
-    
+
                 usleep(100000); // Pausa de 0.1 segundos
             }
+        
         } else {
             echo "data: " . json_encode(['message' => 'Conexão perdida, operacão finalizada!']) . "\n\n";
             ob_flush();
