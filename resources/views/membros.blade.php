@@ -26,9 +26,11 @@
       <ul>
         @foreach($users as $user)
           <li>
-            {{ $user->name }}
-            <button type="button">Editar</button>
-            <button type="button">Excluir</button>
+          <span class= "username">{{ $user->name }}</span>
+            <div class= "botoes">
+            <button type="button" class="btn-edit"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button type="button" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
           </li>
         @endforeach
       </ul>
