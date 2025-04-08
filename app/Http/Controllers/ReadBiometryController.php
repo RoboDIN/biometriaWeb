@@ -10,6 +10,7 @@ class ReadBiometryController extends Controller
 {
     public function readBiometry()
     {
+
         $port = "\\\\.\\COM10";
         $baudRate = 57600;
 
@@ -19,6 +20,7 @@ class ReadBiometryController extends Controller
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
+      
 
         $handle = @fopen($port, "r+");
 
@@ -47,9 +49,16 @@ class ReadBiometryController extends Controller
 
                 } elseif (strpos($data, 'ACESSADO') !== false) {
 
-                    $data = fgets($handle, 1024);
-
-                    echo "data: " . json_encode(['message' => $data]) . "\n\n";
+                    $IDBiometria = trim(fgets($handle, 1024)); 
+                    
+                    $user = User::where('biometry', $IDBiometria)->first();
+                
+                    if ($user) {
+                        echo "data: " . json_encode(['message' => "Acesso liberado para {$user->name}"]) . "\n\n";
+                    } else {
+                        echo "data: " . json_encode(['message' => "Usuário não encontrado para o ID enviado."]) . "\n\n";
+                    }
+                
                     ob_flush();
                     flush();
                 }
@@ -59,4 +68,5 @@ class ReadBiometryController extends Controller
         }
 
     }
+
 }

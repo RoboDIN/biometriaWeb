@@ -143,21 +143,15 @@ class UserController extends Controller
     
                     } elseif (strpos($data, 'CAPTURANDO') !== false){
 
-                        echo "data: " . json_encode(['message' => "ENTROUU"]) . "\n\n";
-                        ob_flush();
-                        flush();
 
                         $IDbiometria = fgets($handle, 1024);
 
-                        echo "data: " . json_encode(['message' => $IDbiometria ]) . "\n\n";
+                        echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $IDbiometria]) . "\n\n";
                         ob_flush();
                         flush();
 
-                        $biometriaBase64 = base64_encode($IDbiometria);
+                    } elseif (strpos($data, 'FIM') !== false){
 
-                        echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
-                        ob_flush();
-                        flush();
                         break;
 
                     } else {
