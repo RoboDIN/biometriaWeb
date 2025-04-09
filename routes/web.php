@@ -32,6 +32,9 @@ Route::get('/register', [UserController::class, 'create'])->name('user.cadUser')
 Route::post('/register', [UserController::class, 'store'])->name('user.store');
 Route::get('/executar-script', [UserController::class, 'executarScript']);
 
+//deletar usuário
+Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('user.destroy');
+
 require __DIR__ . '/auth.php';
 
 

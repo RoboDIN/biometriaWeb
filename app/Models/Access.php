@@ -15,6 +15,6 @@ class Access extends Model
     // Relacionamento com a tabela users
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_email', 'email');
+        return $this->belongsTo(User::class, 'id_email', 'email')->withTrashed();
     }
 }
