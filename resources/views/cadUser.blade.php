@@ -83,5 +83,5 @@
   </div>
 @endsection
 
-@section('script') {{ asset('js/app.js') }}@endsection
+@section('script') {{ asset('js/cadUser.js') }}@endsection
 

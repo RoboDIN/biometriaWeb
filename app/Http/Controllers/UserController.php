@@ -10,17 +10,27 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+
+    public function destroy($email)
+    {
+    // Procura o usuário pelo email (chave primária)
+    $user = User::findOrFail($email);
+    $user->delete(); // Soft delete (devido ao uso do trait SoftDeletes)
+
+    return redirect()->route('membros.index')->with('success', 'Usuário excluído com sucesso!');
+    }
+    
     public function create() {
         return view('cadUser');
     }
 
     public function index()
     {
-        // Busca todos os usuários, selecionando apenas a coluna "name"
-        $users = User::select('name')->get();
+    // Buscando os usuários com as colunas 'email' e 'name'
+    $users = User::select('email', 'name')->get();
 
-        // Passa os usuários para a view
-        return view('membros', compact('users'));
+    // Passa os usuários para a view
+    return view('membros', compact('users'));
     }
 
     public function store(Request $request) {
@@ -89,10 +99,11 @@ class UserController extends Controller
         $timeout = 5; 
         $statTime = time();
         
+        # Verificacao do setup
         while (true) {
 
             if (time() - $statTime > $timeout) {
-                echo "data: " . json_encode(['message' => 'Cadastro finalizado, verifique a conexão com o sensor!']) . "\n\n";
+                echo "data: " . json_encode(['message' => 'Conexão perdida ! Verifique a conexão com o sensor!']) . "\n\n";
                 ob_flush();
                 flush();
                 break;
@@ -112,7 +123,6 @@ class UserController extends Controller
             usleep(100000); 
         }
 
-
         if ($setupComplete) {
 
             $startCommand = "start\n";
@@ -125,48 +135,48 @@ class UserController extends Controller
     
             $biometria = '';
             $lastDataTime = microtime(true);
-    
+
             // Agora que o Arduino está pronto, continua o processo de leitura de dados
             while (true) {
+
                 $data = fgets($handle, 1024); // Lê a mensagem do Arduino
     
                 if ($data !== false) {
+
                     $data = mb_convert_encoding($data, 'UTF-8', 'auto');
-    
+            
                     if (strpos($data, 'FALHA') !== false) {
                         echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
                         ob_flush();
                         flush();
                         break;
     
-                    } elseif (strpos($data, 'FIM') !== false) {
-                        $biometriaBase64 = base64_encode($biometria);
-    
-                        echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $biometriaBase64]) . "\n\n";
+                    } elseif (strpos($data, 'CAPTURANDO') !== false){
+
+
+                        $IDbiometria = fgets($handle, 1024);
+
+                        echo "data: " . json_encode(['message' => 'FINALIZADO', 'biometria' => $IDbiometria]) . "\n\n";
                         ob_flush();
                         flush();
+
+                    } elseif (strpos($data, 'FIM') !== false){
+
                         break;
-    
-                    } elseif (strpos($data, 'CONCLUIDO') !== false) {
-                        $biometria .= $data;
-    
+
                     } else {
+
                         echo "data: " . json_encode(['message' => $data]) . "\n\n";
                         ob_flush();
                         flush();
+                        
                     }
+                
                 }
-    
-                // Verifica se o tempo de inatividade excedeu o timeout
-                if (microtime(true) - $lastDataTime > $timeout) {
-                    echo "data: " . json_encode(['message' => 'Comando enviado para iniciar Arduino...']) . "\n\n";
-                    ob_flush();
-                    flush();
-                    break;
-                }
-    
+
                 usleep(100000); // Pausa de 0.1 segundos
             }
+        
         } else {
             echo "data: " . json_encode(['message' => 'Conexão perdida, operacão finalizada!']) . "\n\n";
             ob_flush();

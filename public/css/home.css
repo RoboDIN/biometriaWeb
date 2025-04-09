@@ -1,0 +1,30 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 250px 0 0 20px;
+ 
+}
+
+.box h1 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-left: 20px;
+
+}
+
+.box .div-main {
+  height: 100%; 
+  overflow-y: auto;  
+  background-color: #0B3F44;
+  border-radius: 40px;
+  padding: 30px;
+}
+
+.box .div-main #messagesHome p {
+  background-color: white;
+  color: #E65510;
+  padding: 10px;
+  border-radius: 10px;
+
+}

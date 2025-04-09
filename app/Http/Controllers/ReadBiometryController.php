@@ -3,18 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReadBiometryController extends Controller
 {
     public function readBiometry()
     {
+
         $port = "\\\\.\\COM10";
         $baudRate = 57600;
+
+        exec("mode COM10 BAUD=57600 PARITY=N data=8 stop=1 xon=off");
+        usleep(500000);
 
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
+      
 
         $handle = @fopen($port, "r+");
 
@@ -22,8 +28,9 @@ class ReadBiometryController extends Controller
             echo "data: " . json_encode(['error' => 'Não foi possível abrir a porta serial']) . "\n\n";
             ob_flush();
             flush();
-            return;
+            exit;
         }
+
 
         while(true) {
 
@@ -32,51 +39,34 @@ class ReadBiometryController extends Controller
             if ($data !== false) {
 
                 $data = mb_convert_encoding($data, 'UTF-8', 'auto');
+                
+                if (strpos($data, 'FALHA') !== false) {
 
-                if (strpos($data, 'INICIO') !== false) {
-
-                    $biometria .= $data;
-
-                    if ($biometria != '') {
-
-                        $biometriaBase64 = base64_encode($biometria);
-
-                        $users = User::whereNotNull('biometry')->get();
-
-                        foreach ($users as $user) {
-
-                            if ($biometriaBase64 == $user->biometry){
-
-                                $startCommand = "LIBERADO\n";
-                                fwrite($handle, $startCommand);
-                                usleep(100000);
-                            }
-                        }
-
-
-                    }
-
+                    echo "data: " . json_encode(['message' => 'Execução encerrada!']) . "\n\n";
                     ob_flush();
                     flush();
                     break;
 
+                } elseif (strpos($data, 'ACESSADO') !== false) {
+
+                    $IDBiometria = trim(fgets($handle, 1024)); 
+                    
+                    $user = User::where('biometry', $IDBiometria)->first();
+                
+                    if ($user) {
+                        echo "data: " . json_encode(['message' => "Acesso liberado para {$user->name}"]) . "\n\n";
+                    } else {
+                        echo "data: " . json_encode(['message' => "Usuário não encontrado para o ID enviado."]) . "\n\n";
+                    }
+                
+                    ob_flush();
+                    flush();
                 }
             }
+
+            usleep(50000);
         }
 
-
-
-        // Enviar comando para o Arduino
-        file_put_contents($port, "READ\n");
-
-        // Esperar resposta
-        sleep(2);
-        $fingerprintID = trim(file_get_contents($port));
-
-        if (is_numeric($fingerprintID) && $fingerprintID > 0) {
-            return view('home', ['fingerprintID' => $fingerprintID]);
-        }
-
-        return view('home', ['error' => 'Nenhuma digital detectada']);
     }
+
 }

@@ -1,5 +1,4 @@
-// Apresenta data atual do cadastro no campo dataEntrada no formúlario de cadastro de usuário
-document.addEventListener('DOMContentLoaded', function() { 
+function date() {
   var dataEntrada = document.getElementById('entry_date'); 
   
   if (!dataEntrada.value) { 
@@ -10,10 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     dataEntrada.value = ano + '-' + mes + '-' + dia;
   }
-});
+}
 
-// Habilita o campo senha e confirma senha se o checkbox 'administrador' for pressionado 
-document.addEventListener('DOMContentLoaded', function() {
+function atvCheckbox() {
   var adminCheckbox = document.getElementById('is_admin');
   var adminFields = document.getElementById('div-senha');
   var passwordInput = document.getElementById('password');
@@ -37,11 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   toggleAdminFields();                                          // Verifica o estado inicial do checkbox
   adminCheckbox.addEventListener('change', toggleAdminFields);  // Adiciona um evento de alteração ao checkbox
-});
+}
 
-
-// Habilita leitura da porta serial
-document.addEventListener("DOMContentLoaded", function() {
+function cadastroUsuario() {
   const form = document.getElementById('form-executar-script');
   const messagesDiv = document.getElementById('messages');
 
@@ -59,19 +55,9 @@ document.addEventListener("DOMContentLoaded", function() {
     messagesDiv.innerHTML = '<p>Operação de cadastro inicializada</p>';
 
     // Inicia a leitura da serial após o formulário ser enviado
-    eventSource = new EventSource('/executar-script');
-
-    const timeout = setTimeout(function() {
-      const p = document.createElement('p');
-      p.textContent = "Tempo de execução excedido, tentando novamente.";
-      p.className = 'bg-red-100 text-red-700 p-2 rounded';
-
-      messagesDiv.appendChild(p);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-      eventSource.close();  // Fecha o EventSource após o timeout
-      eventSource = null; 
-    }, 30000);
+    if (!eventSource){
+      eventSource = new EventSource('/executar-script');
+    }
     
     eventSource.onmessage = function(event) {
       const data = JSON.parse(event.data);
@@ -82,13 +68,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (message === 'FINALIZADO') {
           
-          clearTimeout(timeout);
-
-          document.getElementById('biometry').value = biometria;
-          alert('Biometria capturada com sucesso!');
+          if (biometria) {
+            document.getElementById('biometry').value = biometria;
+            alert('Biometria capturada com sucesso!');
+          } else {
+            alert('Captura finalizada, mas sem biometria!');
+          }
+        
           eventSource.close();
           eventSource = null;
-          
 
         } else {
 
@@ -113,8 +101,14 @@ document.addEventListener("DOMContentLoaded", function() {
       
       eventSource.close();
       eventSource = null;
-      clearTimeout(timeout);
     };
 
   });
+}
+
+document.addEventListener('DOMContentLoaded', function() { 
+  date();
+  atvCheckbox();
+  cadastroUsuario();
 });
+
