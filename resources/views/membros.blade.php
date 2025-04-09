@@ -29,7 +29,12 @@
           <li>
             {{ $user->name }}
             <button type="button">Editar</button>
-            <button type="button">Excluir</button>
+            
+            <form action="{{ route('user.destroy', ['email' => $user->email]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir?');">
+              @csrf
+              @method('DELETE')
+              <button type="submit">Excluir</button>
+            </form>
           </li>
         @endforeach
       </ul>

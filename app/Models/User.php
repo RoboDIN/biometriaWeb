@@ -6,10 +6,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
 
     protected $table = 'users'; // Nome da tabela no banco de dados
     

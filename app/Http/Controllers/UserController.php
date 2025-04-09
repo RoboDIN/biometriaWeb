@@ -10,17 +10,27 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+
+    public function destroy($email)
+    {
+    // Procura o usuário pelo email (chave primária)
+    $user = User::findOrFail($email);
+    $user->delete(); // Soft delete (devido ao uso do trait SoftDeletes)
+
+    return redirect()->route('membros.index')->with('success', 'Usuário excluído com sucesso!');
+    }
+    
     public function create() {
         return view('cadUser');
     }
 
     public function index()
     {
-        // Busca todos os usuários, selecionando apenas a coluna "name"
-        $users = User::select('name')->get();
+    // Buscando os usuários com as colunas 'email' e 'name'
+    $users = User::select('email', 'name')->get();
 
-        // Passa os usuários para a view
-        return view('membros', compact('users'));
+    // Passa os usuários para a view
+    return view('membros', compact('users'));
     }
 
     public function store(Request $request) {
