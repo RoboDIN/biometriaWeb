@@ -6,9 +6,9 @@
 @section('container')
   <h1>Histórico de Acesso</h1>
   <div class="box">
-    <table>
+    <table class="users">
       <thead>
-        <tr>
+        <tr class = "dados">
           <th>Usuário</th>
           <th>Data</th>
           <th>Hora</th>
@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         @foreach($acessos as $acesso)
-          <tr>
+          <tr class="users_dados">
             <td>{{ $acesso->user->name }}</td> <!-- Nome do usuário -->
             <td>{{ $acesso->data }}</td> <!-- Data do acesso -->
             <td>{{ $acesso->hora }}</td> <!-- Hora do acesso -->
