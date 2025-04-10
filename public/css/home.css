@@ -24,7 +24,13 @@
 .box .div-main #messagesHome p {
   background-color: white;
   color: #E65510;
-  padding: 10px;
   border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 30px 10px 30px;
 
+}
+
+.box .div-main #messagesHome p span {
+  margin-right: 10px;
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Access;
 use Illuminate\Http\Request;
 
 class ReadBiometryController extends Controller
@@ -54,7 +55,16 @@ class ReadBiometryController extends Controller
                     $user = User::where('biometry', $IDBiometria)->first();
                 
                     if ($user) {
-                        echo "data: " . json_encode(['message' => "Acesso liberado para {$user->name}"]) . "\n\n";
+
+                        $access = new Access();
+                        $access->id_email = $user->email;
+                        $access->data = now()->toDateString(); 
+                        $access->hora = now()->toTimeString(); 
+                        $access->save();
+
+                        echo "data: " . json_encode(['message' => "{$user->name}", "dataEntrada" => $access->data, "horaEntrada" => $access->hora]) . "\n\n";
+
+
                     } else {
                         echo "data: " . json_encode(['message' => "Usuário não encontrado para o ID enviado."]) . "\n\n";
                     }

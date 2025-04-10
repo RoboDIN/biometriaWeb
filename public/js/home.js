@@ -14,8 +14,33 @@ function readBiometria() {
     eventSource.onmessage = function(event) {
       const data = JSON.parse(event.data);
       const message = data.message;
+      const dataEntrada = data.dataEntrada;
+      const horaEntrada = data.horaEntrada;
 
-      if (message) {
+      if (message && dataEntrada) {
+
+        const p = document.createElement('p');
+        p.className = 'bg-blue-100 text-blue-700 p-2 rounded flex justify-between';
+
+        // Cria o span da esquerda (start)
+        const leftSpan = document.createElement('span');
+        leftSpan.textContent = message; 
+        leftSpan.className = 'text-start';
+
+        // Cria o span da direita (end)
+        const rightSpan = document.createElement('span');
+        rightSpan.textContent = dataEntrada + ' às ' + horaEntrada;
+        rightSpan.className = 'text-end text-sm text-gray-500';
+
+        // Adiciona os dois spans ao <p>
+        p.appendChild(leftSpan);
+        p.appendChild(rightSpan);
+
+        // Adiciona ao container
+        messagesDiv.appendChild(p);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      } else if (message) {
 
         const p = document.createElement('p');
         p.textContent = message;
