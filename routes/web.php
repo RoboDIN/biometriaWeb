@@ -6,6 +6,11 @@ use App\Http\Controllers\MembroController;
 use App\Http\Controllers\ReadBiometryController;
 use Illuminate\Support\Facades\Route;
 
+
+//Edição de usuários
+Route::get('/user/{email}/edit', [UserController::class, 'edit'])->name('user.edit');
+Route::put('/user/{email}', [UserController::class, 'update'])->name('user.update');
+
 // Rotas configurados o fluxo web do sistema  
 Route::get('/', function () { return view('home'); })->name('home')->middleware('auth');
 Route::get('/read-arduino', [ReadBiometryController::class, 'readBiometry'])->middleware('auth');

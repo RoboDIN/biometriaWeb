@@ -10,6 +10,50 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    public function edit($email)
+    {
+        // Busca o usuário pelo email ou lança um erro 404 caso não encontre
+        $user = User::findOrFail($email);
+        // Retorna a view de edição passando o usuário
+        return view('editUser', compact('user'));
+    }
+    
+    public function update(Request $request, $email)
+    {
+        // Busca o usuário a ser editado
+        $user = User::findOrFail($email);
+    
+        // Define as regras de validação (não incluímos a digital)
+        $rules = [
+            'name'       => 'required|string|max:255',
+            'advisor'    => 'nullable|string|max:255',
+            'entry_date' => 'date',
+            'genre'      => 'required|in:masculino,feminino,outro',
+            'is_admin'   => 'boolean',
+        ];
+    
+        // Caso a opção de admin esteja marcada, pode validar a senha se for informada
+        if ($request->is_admin) {
+            $rules['password'] = 'nullable|string|min:8|confirmed';
+        }
+    
+        $validated = $request->validate($rules);
+    
+        // Caso a senha tenha sido informada, criptografa; se não, não altera
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            // Se a senha não for enviada, remove o campo para que o update não modifique o valor atual
+            unset($validated['password']);
+        }
+    
+        // Atualiza os dados do usuário (não incluímos o campo biometry, evitando alterações na digital)
+        $user->update($validated);
+    
+        return redirect()->route('membros.index')->with('success', 'Usuário atualizado com sucesso!');
+    }
+    
+
 
     public function destroy($email)
     {
