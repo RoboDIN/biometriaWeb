@@ -27,18 +27,19 @@
       <ul>
         @foreach($users as $user)
           <li>
+
             {{ $user->name }}
             <!-- <button type="button">Editar</button> -->
             @if(auth()->user()->is_admin)
                 <a href="{{ route('user.edit', ['email' => $user->email]) }}">Editar</a>
             @endif
-
             
             <form action="{{ route('user.destroy', ['email' => $user->email]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir?');">
               @csrf
               @method('DELETE')
-              <button type="submit">Excluir</button>
+              <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
             </form>
+            </div>
           </li>
         @endforeach
       </ul>

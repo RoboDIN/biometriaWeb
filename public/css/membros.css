@@ -62,42 +62,44 @@
 .list-box {
   height: 85%;
   padding: 20px;
-  font-size: 20px;
+  font-size: 28px;
   background-color:#0b3f44;
   border-radius: 50px;
   width: 95%;
-  
+  overflow-y: auto;
 }
 .list-box li{
   display: flex;
   margin-bottom: 10px;
-  color: aliceblue;
+  color: black;
   align-items: center;
   justify-content: space-between;
   max-width: 100%;
 }
 
-.username{
-  white-space: nowrap;       
-  text-overflow: ellipsis;   
-  max-width: 60ch;
-  align-items: center;           
+.username {
+  background-color: white;
+  color: #040e0f;
+  padding: 8px 16px;
+  border-radius: 20px;
   flex-grow: 1;
-  min-width: 0;
+  max-width: 60ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .botoes{
   display: flex;
-  gap:10px;
-  margin-left: 75%;
-  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  gap: 10px;
+  margin-right: 10%;
 }
 
-.btn-edit i, .btn-delete i {
-  align-items: center;
- 
-  font-size: 15px;
+.edit-btn i, .delete-btn i {
+  font-size: 25px;
   padding: 6px;
-  border-radius: 80%;
+  border-radius: 20px;
   color: #0b3f44;
   cursor: pointer;
 
