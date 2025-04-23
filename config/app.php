@@ -15,7 +15,7 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'America/Sao_Paulo'),
 
     'locale' => 'pt_BR',
 
