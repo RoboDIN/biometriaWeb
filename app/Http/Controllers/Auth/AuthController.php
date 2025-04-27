@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Models\User;
+
 
 class AuthController extends Controller
 {
@@ -21,6 +23,15 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && is_null($user->password)) {
+            // Se a senha for null, retornamos uma mensagem personalizada
+            return back()->withErrors([
+                'password' => 'Este usuário não pode fazer login porque não possui senha definida.',
+            ]);
+        }
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();

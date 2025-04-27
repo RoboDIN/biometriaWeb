@@ -7,7 +7,7 @@
 @section('container') 
 
   <div class="search-box">
-    <form action="search" action="{{ route('membro.search') }}" method="GET">
+    <form action="{{ route('membro.search') }}" method="GET">
       <input type="search" name="name" placeholder="Pesquisar">
       <button type="submit"><i ty class="fa-solid fa-magnifying-glass"></i></button>
     </form>
@@ -28,17 +28,15 @@
         @foreach($users as $user)
           <li>
 
-            {{ $user->name }}
-            <!-- <button type="button">Editar</button> -->
-            @if(auth()->user()->is_admin)
-                <a href="{{ route('user.edit', ['email' => $user->email]) }}">Editar</a>
-            @endif
-            
-            <form action="{{ route('user.destroy', ['email' => $user->email]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir?');">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-            </form>
+            <p>{{ $user->name }}</p>
+
+            <div class="div-op">
+              <button><a class="edit-btn" href="{{ route('user.edit', ['email' => $user->email]) }}"><i class="fa-solid fa-file-pen"></i></a></button>
+              <form action="{{ route('user.destroy', ['email' => $user->email]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+              </form>    
             </div>
           </li>
         @endforeach

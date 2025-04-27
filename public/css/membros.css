@@ -1,11 +1,11 @@
-.search-box {
+.container .search-box {
   width: 100%;
   display: flex;
   align-items: center;
  
 }
 
-.search-box form {
+.container .search-box form {
   width: 70%;
   margin: 20px;
   display: flex;
@@ -19,28 +19,27 @@
   cursor: pointer;
 }
 
-.search-box form:hover {
+.container .search-box form:hover {
   border: 1px solid #007bff;
 }
 
-.search-box form input {
+.container .search-box form input {
   width: 80%;
   font-size: 15px;
   outline: none;
   border: none;
 }
 
-.search-box form button {
+.container .search-box form button {
   background-color: transparent;
   border: none;
 }
 
-.search-box form button i {
-  width: 10px;
-  height: 10px;
+.container .search-box form button i {
+  font-size: 20px;
 }
 
-.search-box a {
+.container .search-box a {
   width: 20%;
   background-color:#E65510;
   padding: 15px;
@@ -53,13 +52,13 @@
 
 }
 
-.search-box a:hover {
+.container .search-box a:hover {
   background-color: #e65410d0;
   border: 1px solid #e65410d0;
 
 }
 
-.list-box {
+.container .list-box {
   height: 85%;
   padding: 20px;
   font-size: 28px;
@@ -67,37 +66,60 @@
   border-radius: 50px;
   width: 95%;
   overflow-y: auto;
+
+  /* Para Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff transparent;
 }
-.list-box li{
+
+/* Para Chrome */
+.container .list-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.container .list-box::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+.container .list-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.container .list-box li {
   display: flex;
-  margin-bottom: 10px;
-  color: black;
+  color: #ffffff;
   align-items: center;
   justify-content: space-between;
   max-width: 100%;
+  border-bottom: 1px solid #ffffff;
 }
 
-.username {
-  background-color: white;
-  color: #040e0f;
-  padding: 8px 16px;
-  border-radius: 20px;
-  flex-grow: 1;
-  max-width: 60ch;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.botoes{
+.container .list-box .div-op {
   display: flex;
+  align-items: baseline;
   justify-content: center;
-  margin-left: auto;
-  gap: 10px;
-  margin-right: 10%;
+  width: 30%;
 }
 
-.edit-btn i, .delete-btn i {
-  font-size: 25px;
+.container .list-box li p {
+  font-size: 20px;
+  width: 80%;
+}
+
+.container .list-box .div-op a,
+.container .list-box .div-op form {
+  margin: 0 5px;
+}
+
+.container .list-box .div-op form {
+  display: flex;
+  align-items: center;
+}
+
+.container .list-box .div-op .edit-btn i,
+.container .list-box form .delete-btn i {
+  font-size: 20px;
   padding: 6px;
   border-radius: 20px;
   color: #0b3f44;
