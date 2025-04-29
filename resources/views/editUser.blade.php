@@ -1,7 +1,7 @@
 @extends('layouts.base_app') 
 
 @section('title', 'Editar Usuário') 
-@section('css') {{ asset('css/cadUser.css') }} @endsection
+@section('css') {{ asset('css/editUser.css') }} @endsection
 
 @section('container') 
   <h1>Editar Usuário</h1>
@@ -31,9 +31,9 @@
         <label for="genre">Sexo:</label>
         <select id="genre" name="genre">
           <option value="">Selecione</option>
-          <option value="Masculino" {{ old('genre', $user->genre) == 'Masculino' ? 'selected' : '' }}>Masculino</option>
-          <option value="Feminino" {{ old('genre', $user->genre) == 'Feminino' ? 'selected' : '' }}>Feminino</option>
-          <option value="Outro" {{ old('genre', $user->genre) == 'Outro' ? 'selected' : '' }}>Outro</option>
+          <option value="masculino" {{ old('genre', $user->genre) == 'Masculino' ? 'selected' : '' }}>Masculino</option>
+          <option value="feminino" {{ old('genre', $user->genre) == 'Feminino' ? 'selected' : '' }}>Feminino</option>
+          <option value="outro" {{ old('genre', $user->genre) == 'Outro' ? 'selected' : '' }}>Outro</option>
         </select>
         @error('genre')<p style="color: red;">{{ $message }}</p>@enderror
       </div>
@@ -59,7 +59,17 @@
         <label for="is_admin">Administrador</label> 
         @error('is_admin')<p style="color: red;">{{ $message }}</p>@enderror
       </div>
-
+      <div id="div-senha" class="hidden">
+        <div class="box">
+          <label for="password">Senha:</label>
+          <input type="password" id="password" name="password">
+          @error('password')<p style="color: red;">{{ $message }}</p>@enderror
+        </div>
+        <div class="box">
+          <label for="password_confirmation">Confirmar Senha:</label>
+          <input type="password" id="password_confirmation" name="password_confirmation">
+        </div>
+      </div>
     </div>
 
     <button type="submit">Salvar</button>

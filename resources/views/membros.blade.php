@@ -32,10 +32,16 @@
 
             <div class="div-op">
               <button><a class="edit-btn" href="{{ route('user.edit', ['email' => $user->email]) }}"><i class="fa-solid fa-file-pen"></i></a></button>
-              <form action="{{ route('user.destroy', ['email' => $user->email]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir?');">
+              <form id="formExcluir-{{ $user->email }}"
+                action="{{ route('user.destroy', ['email' => $user->email]) }}" 
+                method="POST" 
+                style="display:inline;" 
+                onsubmit="return confirmarExclusao(event, '{{ $user->email }}');">
+
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+
               </form>    
             </div>
           </li>
@@ -45,3 +51,5 @@
   </div>
 
 @endsection
+
+@section('script') {{ asset('js/membros.js') }}@endsection

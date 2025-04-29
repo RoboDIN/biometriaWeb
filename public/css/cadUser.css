@@ -1,13 +1,14 @@
 .container {
   width: 100%;
   padding: 20px 60px 0;
+  overflow-y: auto;
 }
 
 form {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 40px;
 }
 
 form .item {
@@ -49,16 +50,6 @@ form .item:nth-child(3) .div:nth-child(2) input {
   width: 93%;
 } 
 
-form .item:nth-child(4) .div {
-  flex-direction: row;
-  align-items: center;
-  width: 30%;
-}
-
-form .item:nth-child(4) .div input {
-  width: 20px;
-}
-
 form .item:nth-child(4) .hidden {
   display: none;
 }
@@ -68,6 +59,16 @@ form .item:nth-child(4) .flex-container {
   display: flex;
   gap: 15px;
 }
+
+form .item:nth-child(4) .div  {
+ flex-direction: row;
+ align-items: center;
+}
+
+form .item:nth-child(4) .div input  {
+  width: 10%;
+ }
+
 
 form button {
   background-color: #2E8C8C;

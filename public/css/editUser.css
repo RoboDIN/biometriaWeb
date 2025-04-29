@@ -1,0 +1,76 @@
+.container {
+  width: 100%;
+  padding: 20px 60px 0;
+  overflow-y: auto;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+form .item {
+  display: flex;
+  width: 100%;
+}
+
+form .item .div,
+form .item:nth-child(5) .flex-container .box {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 10px;
+}
+
+form .item .div input,
+form .item .div select,
+.item:nth-child(5) .flex-container .box input  {
+  width: 90%;
+  padding: 5px;
+  border: 1px solid #CCC0C0;
+  border-radius: 10px;
+}
+
+form .item .div select {
+  width: 93%;
+  background-color: white;
+}
+
+form .item:nth-child(5) .div  {
+  flex-direction: row;
+  align-items: center;
+ }
+ 
+ form .item:nth-child(5) .div input  {
+  width: 10%;
+}
+
+form .item:nth-child(5) .hidden {
+  display: none;
+}
+
+form .item:nth-child(5) .flex-container {
+  width: 80%;
+  display: flex;
+  gap: 15px;
+}
+
+form button, 
+form a {
+  text-decoration: none;
+  text-align: center;
+  background-color: #2E8C8C;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 10px;
+  width: 100px;
+  cursor: pointer;;
+}
+
+
+
